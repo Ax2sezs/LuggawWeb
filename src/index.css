@@ -1,0 +1,45 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+@theme{
+    
+    --color-main-green:#194829;
+    --color-main-brown:#8c623a;
+    --color-sub-brown:#eee9d5;
+    --color-main-orange:#f8bc64;
+    --color-bg:#fbf9f3;
+    --font-itim:"Itim",curvive,sans-serif;
+}
+
+@layer utilities {
+  .bg-grid-pattern {
+    background-image:
+      linear-gradient(to right, rgba(140, 98, 58, 0.2) 1px, transparent 2px),
+      linear-gradient(to bottom, rgba(140, 98, 58, 0.2) 1px, transparent 2px);
+    background-size: 20px 20px;
+  }
+}
+
+.mySwiper .swiper-pagination {
+  margin-top: 8px;
+  text-align: center;
+  position: relative; /* ทำให้ bullet อยู่ใน flow ปกติ */
+}
+.swiper-pagination-bullet {
+  background-color: #d1d5db !important;
+  opacity: 1 !important;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: #f8bc64 !important;
+}
+
+
+
+
+body {
+  @apply font-itim;
+}
+
+
+
