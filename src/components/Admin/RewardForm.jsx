@@ -14,6 +14,7 @@ export default function RewardForm({ initialData, onCancel, onSave }) {
         endDate: "",
         imageFile: null,
         imagePreview: "",
+        rewardType: ""
     });
 
     useEffect(() => {
@@ -27,6 +28,7 @@ export default function RewardForm({ initialData, onCancel, onSave }) {
                 endDate: initialData.endDate ? initialData.endDate.slice(0, 16) : "",
                 imageFile: null,
                 imagePreview: initialData.imageUrl || "",
+                rewardType: initialData.rewardType || "",
             });
         }
     }, [initialData]);
@@ -108,6 +110,20 @@ export default function RewardForm({ initialData, onCancel, onSave }) {
                     />
                 </div>
                 <div className="flex flex-col w-1/3">
+                    <label htmlFor="rewardType">Reward Type</label>
+                    <select
+                        name="rewardType"
+                        value={form.rewardType}
+                        onChange={handleChange}
+                        className="w-full p-2 border rounded"
+                        required
+                    >
+                        <option value="0">General</option>
+                        <option value="1">BirthDay</option>
+                        <option value="2">Exclusive</option>
+                    </select>
+                </div>
+                {/* <div className="flex flex-col w-1/3">
                     <span className="">Coupon Code</span>
                     <input
                         type="text"
@@ -118,7 +134,7 @@ export default function RewardForm({ initialData, onCancel, onSave }) {
                         className="w-full p-2 rounded"
                         disabled
                     />
-                </div>
+                </div> */}
             </div>
             <div className="flex flex-col">
                 <span className="">Description</span>

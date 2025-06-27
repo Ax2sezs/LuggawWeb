@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import useAdmin from "../../hooks/useAdmin";
 import RewardForm from "./RewardForm";
 import toast from "react-hot-toast";
+import { form } from "motion/react-client";
 
 
 export default function RewardManagement() {
@@ -27,6 +28,7 @@ export default function RewardManagement() {
                     startDate: data.startDate ? data.startDate.slice(0, 16) : "",   // แปลงตัดมาแค่ 16 ตัวแรก "YYYY-MM-DDTHH:mm"
                     endDate: data.endDate ? data.endDate.slice(0, 16) : "",
                     imageUrl: data.imageUrl,
+                    rewardType: data.rewardType,
                 });
 
             } catch (err) {
@@ -45,6 +47,7 @@ export default function RewardManagement() {
         data.append("pointsRequired", formData.coin);
         data.append("description", formData.description);
         data.append("couponCode", formData.couponCode);
+        data.append("rewardType", formData.rewardType);
         if (formData.startDate) data.append("startDate", formData.startDate);
         if (formData.endDate) data.append("endDate", formData.endDate);
         if (formData.imageFile) data.append("imageFile", formData.imageFile);

@@ -33,7 +33,7 @@ export default function MainAppLayout({ user, logout, fetchPoints, points }) {
   };
 
   return (
-    <div className="bg-white shadow-lg w-full text-center min-h-screen flex flex-col">
+    <div className="bg-sub-brown shadow-lg w-full text-center min-h-screen flex flex-col">
       <UserProfile user={user} points={points} onLogout={logout} onShowTransactions={() => setActiveView("transaction")} />
 
       <div className="flex-1 overflow-auto mb-12 -mt-8 relative">

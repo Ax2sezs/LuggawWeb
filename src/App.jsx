@@ -19,7 +19,9 @@ import CreateFeedForm from "./components/Admin/CreateFeedForm";
 import AdminTransaction from "./components/Admin/AdminTransaction";
 
 import CallbackHandler from "./components/CallbackHandler";
+
 import { clearAuthData } from "./utils/auth";
+
 
 export default function App() {
   const {
@@ -39,7 +41,7 @@ useEffect(() => {
     console.log("🔒 ล้าง localStorage ทุก 30 นาที");
     clearAuthData();
     window.location.href = "/"; // redirect ไปหน้า login
-  },30 * 60 * 1000); // 30 นาที
+  }, 30 * 60 * 1000); // 30 นาที
 
   return () => clearInterval(interval); // เคลียร์เมื่อ component unmount
 }, []);

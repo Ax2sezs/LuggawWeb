@@ -291,6 +291,23 @@ function useAdmin() {
         }
     };
 
+   const loginAdmin = async (username, password) => {
+    setLoading(true);
+    try {
+        const data = { username, password };
+        const res = await api.loginAdmin(data);
+        return res.data; // คาดว่าเป็น { token, userId, ... }
+    } catch (err) {
+        console.error("Login failed", err);
+        setError(err);
+        throw err;
+    } finally {
+        setLoading(false);
+    }
+};
+
+
+
 
 
 
@@ -360,7 +377,9 @@ function useAdmin() {
         fetchDashboard,
         fetchCategory,
         cate,
-        fetchCategoryCode
+        fetchCategoryCode,
+
+        loginAdmin,
     };
 }
 

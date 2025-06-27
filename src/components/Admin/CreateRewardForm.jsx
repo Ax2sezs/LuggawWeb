@@ -19,7 +19,8 @@ export default function CreateRewardForm({ initialData, onCancel, onSave }) {
         endDate: "",
         imageFile: null,
         imagePreview: "",
-        categoryId: ""
+        categoryId: "",
+        rewardType: "0"
     });
 
     useEffect(() => {
@@ -50,8 +51,8 @@ export default function CreateRewardForm({ initialData, onCancel, onSave }) {
 
     const handleGenerateCode = async () => {
         if (!form.categoryId) {
-            toast.error("กรุณาเลือกหมวดหมู่ก่อน",{
-                position:"top-center"
+            toast.error("กรุณาเลือกหมวดหมู่ก่อน", {
+                position: "top-center"
             });
             return;
         }
@@ -92,7 +93,8 @@ export default function CreateRewardForm({ initialData, onCancel, onSave }) {
         formData.append("StartDate", form.startDate);
         formData.append("EndDate", form.endDate);
         formData.append("IsActive", true);
-        formData.append("CategoryId", form.categoryId); // 👈 เพิ่มตรงนี้
+        formData.append("CategoryId", form.categoryId);
+        formData.append("RewardType", form.rewardType);
 
         if (form.imageFile) {
             formData.append("Image", form.imageFile); // ✅ ต้องเป็น binary file
@@ -147,7 +149,7 @@ export default function CreateRewardForm({ initialData, onCancel, onSave }) {
                 )}
             </div>
             <div className="flex flex-row gap-5">
-                <div className="w-2/3">
+                <div className="w-1/3">
                     <label htmlFor="categoryId">Category</label>
                     <select
                         name="categoryId"
@@ -181,11 +183,27 @@ export default function CreateRewardForm({ initialData, onCancel, onSave }) {
                             onClick={handleGenerateCode}
                             className="btn btn-outline"
                         >
-                            <Dices/>
+                            <Dices />
                             Generate Code
                         </button>
                     </div>
                 </div>
+                <div className="flex flex-col w-1/3">
+                    <label htmlFor="rewardType">Reward Type</label>
+                    <select
+                        name="rewardType"
+                        value={form.rewardType}
+                        onChange={handleChange}
+                        className="w-full p-2 border rounded"
+                        required
+                    >
+                        <option value="0">General</option>
+                        <option value="1">BirthDay</option>
+                        <option value="2">Exclusive</option>
+                    </select>
+                </div>
+
+
 
             </div>
 

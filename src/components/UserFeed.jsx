@@ -29,7 +29,7 @@ export default function UserFeed({ feeds, loading, error, toggle }) {
                                                 <motion.img
                                                     src={img.url}
                                                     alt="feed"
-                                                    className="w-full h-72 object-cover rounded-lg"
+                                                    className="w-full h-[358px] object-cover rounded-lg"
                                                     whileHover={{ scale: 1.02 }}
                                                     transition={{ duration: 0.3 }}
                                                 />
@@ -40,7 +40,7 @@ export default function UserFeed({ feeds, loading, error, toggle }) {
                                     <motion.img
                                         src={feed.imageUrls[0].url}
                                         alt="feed"
-                                        className="w-full h-64 object-cover rounded-lg"
+                                        className="w-full h-[358px] object-cover rounded-lg"
                                         whileHover={{ scale: 1.02 }}
                                         transition={{ duration: 0.3 }}
                                     />

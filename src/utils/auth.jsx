@@ -45,3 +45,4 @@ export function clearAuthData() {
   localStorage.removeItem("jwtToken");
   sessionStorage.removeItem("line_code_used");
 }
+

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { CheckCircle, Gift, Star, CalendarDays } from "lucide-react";
 import { useReward } from "../hooks/useReward";
@@ -12,17 +12,33 @@ export default function RewardList({ reloadPoints }) {
     const sortedRewards = [...(rewards || [])].sort((a, b) => {
         const now = new Date();
 
-        const isADisabled =
-            now < new Date(a.startDate) ||
-            now > new Date(a.endDate);
+        const isADisabled = now < new Date(a.startDate) || now > new Date(a.endDate);
+        const isBDisabled = now < new Date(b.startDate) || now > new Date(b.endDate);
 
-        const isBDisabled =
-            now < new Date(b.startDate) ||
-            now > new Date(b.endDate);
+        // กำหนด priority ตาม RewardType (0 = ทั่วไป, 1 = Birthday, 2 = Exclusive)
+        const getPriority = (reward) => {
+            if (reward.rewardType === 1) return 0; // 🎂 Birthday สูงสุด
+            if (reward.rewardType === 2) return 1; // 🚫 Exclusive รองลงมา
+            return 2; // ปกติ
+        };
 
+        const priorityA = getPriority(a);
+        const priorityB = getPriority(b);
+
+        // ✅ Step 1: เรียงตาม RewardType ก่อน (Birthday < Exclusive < ทั่วไป)
+        if (priorityA !== priorityB) {
+            return priorityA - priorityB;
+        }
+
+        // ✅ Step 2: ถ้า priority เท่ากัน → แยกว่า disabled หรือไม่
         return Number(isADisabled) - Number(isBDisabled); // false ก่อน true
     });
 
+    const onRedeemCallback = useCallback(async (rewardId) => {
+        await handleRedeem(rewardId);
+        await fetchPoints();
+        setShowSuccessModal(true);
+    }, [handleRedeem, fetchPoints]);
 
 
     useEffect(() => {
@@ -67,11 +83,7 @@ export default function RewardList({ reloadPoints }) {
                             key={reward.rewardId}
                             reward={reward}
                             points={points}
-                            onRedeem={async (rewardId) => {
-                                await handleRedeem(rewardId);   // เรียก API
-                                await fetchPoints();            // รีเฟรชคะแนน
-                                setShowSuccessModal(true);      // แสดง modal
-                            }}
+                            onRedeem={onRedeemCallback}
                         />
 
                     </motion.div>
@@ -82,15 +94,15 @@ export default function RewardList({ reloadPoints }) {
                 <motion.dialog
                     open
                     className="modal"
-                    // initial={{ opacity: 0, scale: 0.95 }}
-                    // animate={{ opacity: 1, scale: 1 }}
-                    // exit={{ opacity: 0, scale: 0.95 }}
-                    // transition={{ duration: 0.25 }}
+                // initial={{ opacity: 0, scale: 0.95 }}
+                // animate={{ opacity: 1, scale: 1 }}
+                // exit={{ opacity: 0, scale: 0.95 }}
+                // transition={{ duration: 0.25 }}
                 >
                     <div className="modal-box max-w-sm bg-white rounded-2xl text-center">
                         <Gift className="mx-auto text-green-600 w-16 h-16 mb-4" />
                         <h2 className="text-xl font-semibold text-black">แลกของรางวัลสำเร็จ!</h2>
-                        <p className="text-gray-600 mt-2">โปรดตรวจสอบในหน้าประวัติการแลก</p>
+                        <p className="text-gray-600 mt-2">โปรดตรวจสอบในหน้า Redeemed</p>
                         <div className="border-dashed border-gray-200 border-2 mx-5 my-5"></div>
 
                         <div className="mt-4">

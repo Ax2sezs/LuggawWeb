@@ -12,6 +12,9 @@ export default function RedeemedRewardList({ userId, status = "unused" }) {
     const [rewards, setRewards] = useState([]);
     const [selectedReward, setSelectedReward] = useState(null);
     const isModalOpen = selectedReward !== null;
+    const now = new Date();
+    const currentMonth = now.getMonth() + 1;
+    const currentYear = now.getFullYear();
 
     const dialogRef = useRef();
     const couponUsedRef = useRef(null);
@@ -52,8 +55,20 @@ export default function RedeemedRewardList({ userId, status = "unused" }) {
 
     useSignalR(
         (couponData) => {
-            toast.success("คูปองนี้ถูกใช้เรียบร้อยแล้ว 🎉");
-            couponUsedRef.current = couponData;
+            toast.success("คูปองนี้ถูกใช้เรียบร้อยแล้ว", {
+                position: "top-center",
+                duration: 3000,
+                style: {
+                    marginTop: "40vh",  // เลื่อน toast ลงกลางจอ
+                    fontSize: "16px",
+                    fontWeight: "bold",
+                    background: "#dcfce7",
+                    color: "#065f46",
+                    border: "1px solid #86efac",
+                    borderRadius: "12px",
+                },
+            });
+            ; couponUsedRef.current = couponData;
             refetch();
         },
         isModalOpen
@@ -104,8 +119,8 @@ export default function RedeemedRewardList({ userId, status = "unused" }) {
                     .slice()
                     .sort((a, b) => (a.isUsed === b.isUsed ? 0 : a.isUsed ? 1 : -1))
                     .map((reward) => {
-                        const isExpired = new Date(reward.endDate) < new Date();
-                        const isDisabled = reward.isUsed || isExpired;
+                        const isDisabled = status === "expired" || reward.isUsed;
+
 
                         return (
                             <motion.div
@@ -120,9 +135,9 @@ export default function RedeemedRewardList({ userId, status = "unused" }) {
                                 className={`relative w-full max-w-md bg-bg rounded-2xl shadow-lg border-dashed border border-black overflow-hidden 
           ${isDisabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"}`}
                             >
-                                {(reward.isUsed || isExpired) && (
+                                {(reward.isUsed || isDisabled) && (
                                     <div className="absolute inset-0 bg-black/60 z-20 flex items-center justify-center pointer-events-none">
-                                        <span className="text-white text-xl">
+                                        <span className="text-white text-xl font-bold">
                                             {reward.isUsed ? "ใช้แล้ว" : "หมดอายุแล้ว"}
                                         </span>
                                     </div>
@@ -163,7 +178,7 @@ export default function RedeemedRewardList({ userId, status = "unused" }) {
                                             <div className="flex items-center gap-2 text-xs mt-1 text-main-brown/80">
                                                 <CalendarDays className="w-4 h-4" />
                                                 <span>
-                                                    {formatDate(reward.startDate)} - {formatDate(reward.endDate)}
+                                                    <span>ใช้ได้ถึง: {reward.rewardType === 1 ? "ภายในเดือนเกิด" : new Date(reward.endDate).toLocaleDateString("th-TH")}</span>
                                                 </span>
                                             </div>
 
@@ -175,8 +190,8 @@ export default function RedeemedRewardList({ userId, status = "unused" }) {
                                         <div className="border-t border-dashed border-gray-400 mt-2" />
 
                                         <div className="flex justify-center items-center h-20">
-                                            {reward.couponCode && !reward.isUsed && !isExpired ? (
-                                                <span className="btn btn-sm  bg-main-green text-white px-3 py-1 rounded flex items-center gap-1 text-sm shadow font-light">
+                                            {reward.couponCode && !reward.isUsed && !isDisabled ? (
+                                                <span className="btn btn-sm bg-main-green text-white px-3 py-1 rounded flex items-center gap-1 text-sm shadow font-light">
                                                     <BarcodeIcon className="w-4 h-4" />
                                                     แสดง Barcode
                                                 </span>
@@ -184,9 +199,10 @@ export default function RedeemedRewardList({ userId, status = "unused" }) {
                                                 <p className="text-red-600 text-sm text-center">
                                                     ใช้แล้วเมื่อ {new Date(reward.usedDate?.split("T")[0]).toLocaleDateString('th-TH')}
                                                 </p>
-                                            ) : isExpired ? (
+                                            ) : isDisabled ? (
                                                 <p className="text-gray-500 text-sm font-medium text-center">หมดอายุแล้ว</p>
                                             ) : null}
+
                                         </div>
 
 
@@ -230,7 +246,7 @@ export default function RedeemedRewardList({ userId, status = "unused" }) {
                                     <div className="px-4 pb-2 text-sm text-gray-800">
                                         <p className="mb-1 font-medium">ระยะเวลาแลก:</p>
                                         <p className="text-xs">
-                                            {formatDate(selectedReward.startDate)} - {formatDate(selectedReward.endDate)}
+                                            <span>ใช้ได้ถึง: {selectedReward.rewardType === 1 ? "ภายในเดือนเกิด" : new Date(selectedReward.endDate).toLocaleDateString("th-TH")}</span>
                                         </p>
                                     </div>
                                     {selectedReward.couponCode && (

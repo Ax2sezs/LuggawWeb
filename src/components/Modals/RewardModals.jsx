@@ -35,6 +35,7 @@ export function ConfirmRedeemModal({ reward, isOpen, onClose, onConfirm }) {
 
             await onConfirm();
             dialogRef.current?.close();
+            onClose(false)
         } catch (err) {
             console.error("❌ Error during confirm redeem:", err);
         }
@@ -62,18 +63,16 @@ export function ConfirmRedeemModal({ reward, isOpen, onClose, onConfirm }) {
                         {/* ชื่อและคำอธิบาย */}
                         <div className="p-4 h-1/2 overflow-auto">
                             <h3 className="text-lg font-bold text-main-green">{reward.rewardName}</h3>
-                            <p className="text-sm text-main-green whitespace-pre-wrap break-words max-h-40">
+                            <p className="text-sm text-main-green whitespace-pre-wrap break-words max-h-40 overflow-auto">
                                 {reward.description.replace(/\\n/g, "\n")}
                             </p>
-
-
                         </div>
                         <div className="border-dashed border-gray-200 border-2 mx-5"></div>
                         {/* ระยะเวลาแลก */}
                         <div className="px-4 pb-2 text-sm text-gray-800 mt-2">
                             <p className="mb-1 font-medium">ระยะเวลาแลก:</p>
                             <p className="text-xs">
-                                {new Date(reward.startDate).toLocaleDateString('TH-th')} - {new Date(reward.endDate).toLocaleDateString('TH-th')}
+                                <span>ใช้ได้ถึง: {reward.rewardType === 1 ? "ภายในเดือนเกิด" : new Date(reward.endDate).toLocaleDateString("th-TH")}</span>
                             </p>
                         </div>
 
