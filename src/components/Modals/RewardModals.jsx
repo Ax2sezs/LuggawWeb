@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import { CheckCircle, Gift, Star, CalendarDays } from "lucide-react";
+import { CheckCircle, Gift, Star, CalendarDays, Calendar } from "lucide-react";
 
 export function ConfirmRedeemModal({ reward, isOpen, onClose, onConfirm }) {
     const dialogRef = useRef(null);
@@ -61,26 +61,28 @@ export function ConfirmRedeemModal({ reward, isOpen, onClose, onConfirm }) {
                     <div className="-mt-6 bg-white rounded-t-2xl z-10 relative shadow-inner max-h-[65vh] overflow-y-auto">
 
                         {/* ชื่อและคำอธิบาย */}
-                        <div className="p-4 h-1/2 overflow-auto">
-                            <h3 className="text-lg font-bold text-main-green">{reward.rewardName}</h3>
+                        <div className="py-2 px-4 h-1/2 overflow-auto text-start">
+                            <h3 className="text-xl font-bold text-main-green break-words">{reward.rewardName} asdasdjhassakdjkaskldsakdsajdlsjlhdsadjlsdsjlhdasjhldsajhadsjhlsda</h3>
                             <p className="text-sm text-main-green whitespace-pre-wrap break-words max-h-40 overflow-auto">
-                                {reward.description.replace(/\\n/g, "\n")}
+                                {reward.description.replace(/\\n/g, "\n")}ijafkjsdfkjfsdjkfdijpsdf ifsaisdfisdfkjsfdsdfsdkfjsdflj dsfjkjdfskjsdfkjlsdfkjsdfkljdsfkjdfsjkdfskdfjsjdksfkdfjsdksjfkdfjsjkfds
                             </p>
                         </div>
                         <div className="border-dashed border-gray-200 border-2 mx-5"></div>
                         {/* ระยะเวลาแลก */}
-                        <div className="px-4 pb-2 text-sm text-gray-800 mt-2">
-                            <p className="mb-1 font-medium">ระยะเวลาแลก:</p>
-                            <p className="text-xs">
-                                <span>ใช้ได้ถึง: {reward.rewardType === 1 ? "ภายในเดือนเกิด" : new Date(reward.endDate).toLocaleDateString("th-TH")}</span>
-                            </p>
-                        </div>
+                        <div className="flex w-full justify-between">
+                            <div className="flex flex-row px-4 pb-2 text-sm text-gray-800 mt-2">
+                                <p className="text-sm flex justify-center w-full gap-2">
+                                    <Calendar className="w-5 h-5 text-yellow-500 mr-1"/>
+                                    <span className="mt-1">ใช้ได้ถึง: {reward.rewardType === 1 ? "ภายในเดือนเกิด" : new Date(reward.endDate).toLocaleDateString("th-TH")}</span>
+                                </p>
+                            </div>
 
-                        {/* แสดงคะแนนที่ใช้ */}
-                        <div className="px-4 pb-2 text-sm mt-2 text-gray-800">
-                            <p className="font-medium flex items-center justify-center text-lg">
-                                <Star className="w-5 h-5 text-yellow-500 mr-1" /> ใช้: {reward.pointsRequired} คะแนน
-                            </p>
+                            {/* แสดงคะแนนที่ใช้ */}
+                            <div className="px-4 pb-2 text-sm mt-2 text-gray-800">
+                                <p className="font-medium flex items-center justify-center text-lg">
+                                    <Star className="w-5 h-5 text-yellow-500 mr-1" />{reward.pointsRequired} คะแนน
+                                </p>
+                            </div>
                         </div>
                         <div className="border-dashed border-gray-200 border-2 mx-5"></div>
 

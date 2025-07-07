@@ -2,31 +2,27 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Lock, User } from "lucide-react";
 import toast from "react-hot-toast";
-import useAdmin from "../../hooks/useAdmin";
-
+import useAdminLogin from "../../hooks/useAdminLogin";
 export default function AdminLogin() {
     const navigate = useNavigate();
-    const { loginAdmin } = useAdmin();
+    const { login, loading, error } = useAdminLogin();
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);
         try {
-            const res = await loginAdmin(username, password);
-            localStorage.setItem("admin_token", res.token);
+            const res = await login(username, password);
+            // localStorage.setItem("admin_token", res.token); // ไม่ต้องใส่ เพราะ login() ใน hook เก็บแล้ว
             toast.success("เข้าสู่ระบบสำเร็จ!");
             navigate("/admin");
         } catch (error) {
             toast.error(error?.response?.data?.message || "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
-        } finally {
-            setLoading(false);
         }
     };
-   
+
+
     return (
         <div className="min-h-screen bg-grid-pattern bg-sub-brown flex items-center justify-center px-4 text-black">
             <div className="card w-full max-w-md shadow-xl bg-white rounded-lg p-8">

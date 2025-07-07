@@ -88,8 +88,8 @@ export default function useLineAuth() {
   const fetchPoints = async () => {
     setLoadingPoints(true);
     try {
-      const res = await getUserPoints(user.userId);
-      setPoints(res.data.point);
+      const res = await getUserPoints();
+      setPoints(res.data.totalPoints);
     } catch (err) {
       // setError(err.message); // optional
     } finally {

@@ -8,11 +8,11 @@ import { Heart } from 'lucide-react';
 export default function UserFeed({ feeds, loading, error, toggle }) {
     return (
         <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 text-black gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 text-black gap-6 bg-white">
                 {feeds.map((feed) => (
                     <motion.div
                         key={feed.feedId}
-                        className="card bg-white p-4 flex flex-col border-t-4 border-gray-200"
+                        className="card bg- p-4 flex flex-col border-t-4 border-gray-200"
                     >
                         {feed.imageUrls.length > 0 && (
                             <div className="my-4">

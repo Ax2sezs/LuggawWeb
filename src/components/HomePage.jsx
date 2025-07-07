@@ -74,8 +74,8 @@ export default function HomePage() {
           )}
 
           {!hasMore && (
-            <div className="text-center mt-4 text-gray-500">
-              ไม่มีข้อมูลเพิ่มแล้ว
+            <div className="">
+              <img src="act luggaw.png"/>
             </div>
           )}
         </section>
@@ -87,9 +87,9 @@ export default function HomePage() {
         </div>
       )}
 
-      <footer id="contact" className="rounded-t-4xl">
+      {/* <footer id="contact" className="rounded-t-4xl">
         <img src="./footer.png" />
-      </footer>
+      </footer> */}
     </>
   );
 }

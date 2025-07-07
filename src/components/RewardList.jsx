@@ -15,24 +15,36 @@ export default function RewardList({ reloadPoints }) {
         const isADisabled = now < new Date(a.startDate) || now > new Date(a.endDate);
         const isBDisabled = now < new Date(b.startDate) || now > new Date(b.endDate);
 
-        // กำหนด priority ตาม RewardType (0 = ทั่วไป, 1 = Birthday, 2 = Exclusive)
-        const getPriority = (reward) => {
-            if (reward.rewardType === 1) return 0; // 🎂 Birthday สูงสุด
-            if (reward.rewardType === 2) return 1; // 🚫 Exclusive รองลงมา
-            return 2; // ปกติ
-        };
-
-        const priorityA = getPriority(a);
-        const priorityB = getPriority(b);
-
-        // ✅ Step 1: เรียงตาม RewardType ก่อน (Birthday < Exclusive < ทั่วไป)
-        if (priorityA !== priorityB) {
-            return priorityA - priorityB;
+        if (isADisabled !== isBDisabled) {
+            return Number(isADisabled) - Number(isBDisabled); // enabled มาก่อน disabled
         }
 
-        // ✅ Step 2: ถ้า priority เท่ากัน → แยกว่า disabled หรือไม่
-        return Number(isADisabled) - Number(isBDisabled); // false ก่อน true
+        const pointA = Number(a.pointsRequired);
+        const pointB = Number(b.pointsRequired);
+
+        const getPriority = (reward) => {
+            const rt = Number(reward.rewardType);
+            if (rt === 1) return 0; // Birthday
+            if (rt === 2) return 1; // Exclusive
+            return 2;               // ปกติ
+        };
+
+        if (!isADisabled && !isBDisabled) {
+            const priorityA = getPriority(a);
+            const priorityB = getPriority(b);
+
+            if (priorityA !== priorityB) {
+                return priorityA - priorityB;
+            }
+            return pointA - pointB;
+        } else {
+            // ทั้งคู่ disabled → เรียงตาม pointsRequired
+            return pointA - pointB;
+        }
     });
+
+
+
 
     const onRedeemCallback = useCallback(async (rewardId) => {
         await handleRedeem(rewardId);

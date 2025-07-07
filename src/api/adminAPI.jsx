@@ -65,4 +65,4 @@ export const generateCode = (prefix) =>
     api.get(`/admin/generate-code?prefix=${prefix}`);
 
 export const loginAdmin = (data) =>
-    api.post("/admin/login", data)
+    api.post("/admin/login", data).then((res)=>res.data)

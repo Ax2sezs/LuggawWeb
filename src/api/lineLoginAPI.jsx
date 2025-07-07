@@ -19,7 +19,10 @@ export const handleLineCallback = (code) => {
   });
 };
 
-export const getUserPoints = (userId) => {
-  return api.get(`LineLogin/users/${userId}/points`);
-};
+// export const getUserPoints = (userId) => {
+//   return api.get(`LineLogin/users/${userId}/points`);
+// };
+export const getUserPoints = () => {
+  return api.get("Points/points") 
+}
 
