@@ -13,7 +13,7 @@ const tabs = [
   { key: "redeemed", label: "Redeemed", icon: <CheckCircle className="w-4 h-4 mr-1" /> },
 ];
 
-export default function MainAppLayout({ user, logout, fetchPoints, points }) {
+export default function MainAppLayout({ user, logout, fetchPoints, points, expire }) {
   const [activeView, setActiveView] = useState("home");
   const activeIndex = tabs.findIndex((tab) => tab.key === activeView);
 
@@ -37,7 +37,7 @@ export default function MainAppLayout({ user, logout, fetchPoints, points }) {
       className={`shadow-lg w-full text-center min-h-screen flex flex-col ${activeView === "home" ? "bg-white" : "bg-sub-brown"
         }`}
     >
-      <UserProfile user={user} points={points} onLogout={logout} onShowTransactions={() => setActiveView("transaction")} />
+      <UserProfile user={user} points={points} expire={expire} onLogout={logout} onShowTransactions={() => setActiveView("transaction")} />
 
       <div className="flex-1 overflow-auto mb-12 -mt-8 relative">
         <AnimatePresence mode="wait">

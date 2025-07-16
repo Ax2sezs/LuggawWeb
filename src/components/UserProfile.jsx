@@ -1,6 +1,33 @@
 import { History } from "lucide-react"; // นำเข้า icon
 
-export default function UserProfile({ user, points, onLogout, onShowTransactions }) {
+export default function UserProfile({ user, points, expire, onLogout, onShowTransactions }) {
+    function formatExpireDate(expireString) {
+        if (!expireString) {
+            return ''; // หรือคืนค่าว่างเปล่า หรือค่าที่คุณต้องการหากไม่มีข้อมูล
+        }
+
+        // ตัวอย่าง expireString: "ex 2026-1-31"
+        // แยกเอาเฉพาะส่วนที่เป็นวันที่ออกมา
+        const datePart = expireString.replace('ex ', ''); // จะได้ "2026-1-31"
+
+        // สร้าง Date object จาก string
+        const date = new Date(datePart);
+
+        // ตรวจสอบว่าวันที่ถูกต้องหรือไม่ (เช่น ถ้า datePart ไม่ใช่รูปแบบวันที่ที่ถูกต้อง)
+        if (isNaN(date.getTime())) {
+            return expireString; // คืนค่าเดิมถ้าไม่สามารถแปลงเป็นวันที่ได้
+        }
+
+        // ดึงวัน เดือน ปี
+        const day = String(date.getDate()).padStart(2, '0'); // ทำให้เป็น 2 หลัก (เช่น 1 -> 01)
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // เดือนเริ่มจาก 0 ดังนั้นต้อง +1
+        const year = date.getFullYear();
+
+        // รวมกันเป็นรูปแบบ DD/MM/YYYY
+        return `${day}/${month}/${year}`;
+    }
+    const formattedDate = formatExpireDate(expire);
+
     return (
         <div className="relative z-10">
             {/* Header background */}
@@ -16,9 +43,9 @@ export default function UserProfile({ user, points, onLogout, onShowTransactions
                         <div className="flex flex-col text-start">
                             <span className="text-lg font-bold">สวัสดีคุณ {user.displayName}</span>
                             <div className="flex items-center gap-2 text-yellow-200 font-semibold">
-                                🪙 <span>{points} คะแนน</span>
+                                <span>{points} คะแนน</span>
                             </div>
-                            <span className="text-xs text-bg">หมดอายุใน 31/12/2025</span>
+                            <span className="text-xs text-bg">หมดอายุใน {formattedDate}</span>
                         </div>
                     </div>
 

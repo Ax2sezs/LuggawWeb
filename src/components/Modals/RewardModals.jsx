@@ -1,22 +1,20 @@
 import React, { useRef, useEffect, useState } from "react";
-import { CheckCircle, Gift, Star, CalendarDays, Calendar } from "lucide-react";
+import { Gift, Calendar } from "lucide-react";
 
 export function ConfirmRedeemModal({ reward, isOpen, onClose, onConfirm }) {
     const dialogRef = useRef(null);
     const [isDisabled, setIsDisabled] = useState(false);
     const [cooldown, setCooldown] = useState(0);
 
-
     useEffect(() => {
         if (isOpen) {
-            setIsDisabled(false);   // 🟢 รีเซ็ตให้กดได้ใหม่
-            setCooldown(0);         // 🟢 รีเซ็ต cooldown ด้วย
+            setIsDisabled(false);
+            setCooldown(0);
             dialogRef.current?.showModal();
         } else {
             dialogRef.current?.close();
         }
     }, [isOpen]);
-
 
     useEffect(() => {
         let timer;
@@ -31,91 +29,113 @@ export function ConfirmRedeemModal({ reward, isOpen, onClose, onConfirm }) {
     const handleConfirm = async () => {
         try {
             setIsDisabled(true);
-            setCooldown(30); // 30 วินาที
-
+            setCooldown(30);
             await onConfirm();
             dialogRef.current?.close();
-            onClose(false)
+            onClose(false);
         } catch (err) {
             console.error("❌ Error during confirm redeem:", err);
         }
     };
 
-
     return (
-        <>
-            {/* Confirm Dialog */}
-            <dialog ref={dialogRef} className="modal">
-                <div className="relative modal-box max-w-xs p-0 rounded-2xl overflow-hidden shadow-xl border border-gray-300 bg-white">
-
-                    {/* รูปภาพ */}
-                    <div className="p-1">
+        <dialog ref={dialogRef} className="modal sm:modal-middle">
+            <div className="modal-box p-0 max-w-sm mx-auto bg-bg rounded-3xl shadow-2xl border-0 overflow-hidden font-[Itim]
+                            max-h-[90vh] flex flex-col">
+                <div className="relative">
+                    <figure>
                         <img
                             src={reward.imageUrl}
                             alt={reward.rewardName}
-                            className="w-full h-auto object-cover rounded-2xl"
+                            className="w-full h-auto object-cover"
                         />
-                    </div>
-
-                    {/* กล่องรายละเอียด */}
-                    <div className="-mt-6 bg-white rounded-t-2xl z-10 relative shadow-inner max-h-[65vh] overflow-y-auto">
-
-                        {/* ชื่อและคำอธิบาย */}
-                        <div className="py-2 px-4 h-1/2 overflow-auto text-start">
-                            <h3 className="text-xl font-bold text-main-green break-words">{reward.rewardName} asdasdjhassakdjkaskldsakdsajdlsjlhdsadjlsdsjlhdasjhldsajhadsjhlsda</h3>
-                            <p className="text-sm text-main-green whitespace-pre-wrap break-words max-h-40 overflow-auto">
-                                {reward.description.replace(/\\n/g, "\n")}ijafkjsdfkjfsdjkfdijpsdf ifsaisdfisdfkjsfdsdfsdkfjsdflj dsfjkjdfskjsdfkjlsdfkjsdfkljdsfkjdfsjkdfskdfjsjdksfkdfjsdksjfkdfjsjkfds
-                            </p>
-                        </div>
-                        <div className="border-dashed border-gray-200 border-2 mx-5"></div>
-                        {/* ระยะเวลาแลก */}
-                        <div className="flex w-full justify-between">
-                            <div className="flex flex-row px-4 pb-2 text-sm text-gray-800 mt-2">
-                                <p className="text-sm flex justify-center w-full gap-2">
-                                    <Calendar className="w-5 h-5 text-yellow-500 mr-1"/>
-                                    <span className="mt-1">ใช้ได้ถึง: {reward.rewardType === 1 ? "ภายในเดือนเกิด" : new Date(reward.endDate).toLocaleDateString("th-TH")}</span>
-                                </p>
-                            </div>
-
-                            {/* แสดงคะแนนที่ใช้ */}
-                            <div className="px-4 pb-2 text-sm mt-2 text-gray-800">
-                                <p className="font-medium flex items-center justify-center text-lg">
-                                    <Star className="w-5 h-5 text-yellow-500 mr-1" />{reward.pointsRequired} คะแนน
-                                </p>
-                            </div>
-                        </div>
-                        <div className="border-dashed border-gray-200 border-2 mx-5"></div>
-
-                        {/* ปุ่มยืนยัน/ยกเลิก */}
-                        <div className="flex justify-center items-center gap-3 p-4 w-full">
-                            <button
-                                type="button"
-                                className="btn btn-outline btn-error text-sm w-1/2"
-                                onClick={onClose}
-                            >
-                                ยกเลิก
-                            </button>
-                            <button
-                                type="button"
-                                className={`btn text-sm w-1/2 text-white border-hidden ${isDisabled ? "bg-main-green cursor-not-allowed" : "bg-main-green hover:bg-green-700"}`}
-                                onClick={handleConfirm}
-                                disabled={isDisabled}
-                            >
-                                <Gift className="mr-1" />
-                                {isDisabled ? "กำลังแลก. . ." : "ยืนยันแลก"}
-                            </button>
-                        </div>
-                    </div>
+                    </figure>
                 </div>
 
-                {/* Backdrop */}
-                <form method="dialog" className="modal-backdrop">
-                    <button type="button" onClick={onClose}>close</button>
-                </form>
-            </dialog>
+                {/* Content (scrollable) */}
+                <div className="px-6 py-4 space-y-5 flex-1">
+                    <div className="border-2 border-main-orange w-16 rounded-3xl mb-3 text-center mx-auto" />
 
+                    <div className="text-center space-y-2">
+                        {/* <h3 className="text-xl font-bold text-main-green leading-tight">{reward.rewardName}</h3> */}
+                        {/* <div className="w-16 h-1 bg-main-orange rounded-full mx-auto"></div> */}
+                        <div className="max-h-24 overflow-auto text-start">
+                            <p className="text-main-green text-sm whitespace-pre-wrap">
+                                {reward.description.replace(/\\n/g, "\n")}
+                            </p>
+                        </div>
+                    </div>
 
+                    {/* Expiry info */}
+                    {/* <div className="card bg-white/60 shadow-sm border-0 mt-1">
+                        <div className="card-body px-3 py-2 flex-row items-center gap-2">
+                            <div className="w-8 h-8 rounded-full bg-main-orange flex items-center justify-center">
+                                <Calendar className="w-4 h-4 text-white" />
+                            </div>
+                            <div className="flex text-left text-xs leading-tight">
+                                <div className="font-medium text-main-green">ใช้ได้ถึง :</div>
+                                <div className="font-medium text-main-green/60 ml-1">
+                                    {reward.rewardType === 1
+                                        ? "ภายในเดือนเกิด"
+                                        : new Date(reward.endDate).toLocaleDateString("th-TH")}
+                                </div>
+                            </div>
+                        </div>
+                    </div> */}
 
-        </>
+                    {/* (optional) Cooldown */}
+                    {/* {cooldown > 0 && (
+                        <div className="card bg-error/10 shadow-sm border-0">
+                            <div className="card-body p-4 flex-row items-center gap-3">
+                                <div className="w-10 h-10 rounded-full bg-error flex items-center justify-center">
+                                    <Clock className="w-5 h-5 text-white" />
+                                </div>
+                                <div className="flex-1 text-left">
+                                    <div className="font-medium text-error text-sm">รอสักครู่</div>
+                                    <div className="text-xs text-error/60">กรุณารอ {cooldown} วินาที</div>
+                                </div>
+                            </div>
+                        </div>
+                    )} */}
+                </div>
+                <div className="border border-dashed border-black mx-3 mb-3" />
+                {/* Buttons (fixed bottom) */}
+                <div className="flex gap-3 pt-2 px-6 pb-6">
+                    <button
+                        type="button"
+                        className="btn btn-outline flex-1 rounded-2xl border-2 border-main-green text-main-green hover:bg-main-green/10"
+                        onClick={onClose}
+                    >
+                        ยกเลิก
+                    </button>
+                    <button
+                        type="button"
+                        className={`btn flex-1 rounded-2xl text-white border-0 ${isDisabled
+                            ? 'bg-main-green/60 cursor-not-allowed'
+                            : 'bg-main-green hover:bg-main-green/90'
+                            }`}
+                        onClick={handleConfirm}
+                        disabled={isDisabled}
+                    >
+                        {isDisabled ? (
+                            <>
+                                <span className="loading loading-spinner loading-sm"></span>
+                                กำลังแลก...
+                            </>
+                        ) : (
+                            <>
+                                <Gift className="w-4 h-4" />
+                                {reward.pointsRequired} คะแนน
+                            </>
+                        )}
+                    </button>
+                </div>
+            </div>
+
+            {/* Backdrop */}
+            <form method="dialog" className="modal-backdrop">
+                <button type="button" onClick={onClose}>close</button>
+            </form>
+        </dialog>
     );
 }

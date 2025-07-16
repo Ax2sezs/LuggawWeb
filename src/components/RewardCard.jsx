@@ -69,8 +69,8 @@ export default function RewardCard({ reward, onRedeem, onPointsUpdate, points })
                     {/* <p className="text-sm text-gray-700 mb-2 text-start trucate">{reward.description}</p> */}
 
                     <div className="flex items-center gap-2 text-sm font-medium mb-1">
-                        <Star className="w-4 h-4 text-yellow-500" />
-                        <span>ใช้: {reward.pointsRequired} คะแนน</span>
+                        <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                        <span>{reward.pointsRequired} คะแนน</span>
                     </div>
                     <div className="flex items-center gap-2 text-xs text-gray-500 mb-2">
                         <CalendarDays className="w-4 h-4" />
@@ -83,7 +83,7 @@ export default function RewardCard({ reward, onRedeem, onPointsUpdate, points })
                                 setShowConfirmModal(true);
                             }}
                             disabled={isDisabled}
-                            className={`mt-2 px-4 py-1.5 rounded-md text-sm shadow flex gap-2 transition items-center
+                            className={`mt-2 px-4 py-1.5 rounded-xl text-sm shadow flex gap-2 transition items-center
                             ${isDisabled ? "bg-gray-400 cursor-not-allowed" : "bg-main-green hover:scale-105 text-white"}`}
                         >
                             <Gift /> แลกรางวัล

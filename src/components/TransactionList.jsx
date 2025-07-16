@@ -38,8 +38,11 @@ export default function TransactionList() {
 
     if (error)
         return (
-            <p className="text-center text-main-orange mt-8 font-semibold">
-                Error: {error}
+            // <p className="text-center text-main-orange mt-8 font-semibold">
+            //     Error: {error}
+            // </p>
+             <p className="text-center text-main-brown mt-8 font-medium">
+                ไม่มีประวัติ.
             </p>
         );
 

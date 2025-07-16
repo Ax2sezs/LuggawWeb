@@ -1,8 +1,8 @@
 import React, { useRef, useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Barcode from "react-barcode";
 import { useRedeemedRewards } from "../hooks/useRedeemedRewards";
-import { BarcodeIcon, CalendarDays } from "lucide-react";
+import { BarcodeIcon, CalendarDays, Check, Calendar, CircleCheckBig } from "lucide-react";
 import useSignalR from "../hooks/useSignalR";
 import toast from "react-hot-toast";
 import Pagination from "./Pagination";
@@ -11,6 +11,7 @@ export default function RedeemedRewardList({ userId, status = "unused" }) {
     const { redeemedRewards, loading, error, refetch, totalItem, page, setPage } = useRedeemedRewards(userId, status);
     const [rewards, setRewards] = useState([]);
     const [selectedReward, setSelectedReward] = useState(null);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
     const isModalOpen = selectedReward !== null;
     const now = new Date();
     const currentMonth = now.getMonth() + 1;
@@ -55,21 +56,9 @@ export default function RedeemedRewardList({ userId, status = "unused" }) {
 
     useSignalR(
         (couponData) => {
-            toast.success("คูปองนี้ถูกใช้เรียบร้อยแล้ว", {
-                position: "top-center",
-                duration: 3000,
-                style: {
-                    marginTop: "40vh",  // เลื่อน toast ลงกลางจอ
-                    fontSize: "16px",
-                    fontWeight: "bold",
-                    background: "#dcfce7",
-                    color: "#065f46",
-                    border: "1px solid #86efac",
-                    borderRadius: "12px",
-                },
-            });
-            ; couponUsedRef.current = couponData;
+            couponUsedRef.current = couponData;
             refetch();
+            setShowSuccessModal(true);   // เปิด success modal
         },
         isModalOpen
     );
@@ -168,14 +157,14 @@ export default function RedeemedRewardList({ userId, status = "unused" }) {
 
                                     <div className="flex flex-col justify-between flex-grow px-3 pt-2 text-main-brown border-l-2 border-dashed border-black">
                                         <div>
-                                            <h2 className="text-lg font-extrabold text-main-green truncate text-start">
+                                            <h2 className="text-lg font-extrabold text-main-green truncate text-start w-44 mb-2">
                                                 {reward.rewardName}
                                             </h2>
-                                            <p className="text-sm line-clamp-2 truncate w-40 text-start">
+                                            {/* <p className="text-sm line-clamp-2 truncate w-40 text-start">
                                                 {reward.description}
-                                            </p>
+                                            </p> */}
 
-                                            <div className="flex items-center gap-2 text-xs mt-1 text-main-brown/80">
+                                            <div className="flex items-center gap-2 text-xs mt-1 text-gray-500">
                                                 <CalendarDays className="w-4 h-4" />
                                                 <span>
                                                     <span>ใช้ได้ถึง: {reward.rewardType === 1 ? "ภายในเดือนเกิด" : new Date(reward.endDate).toLocaleDateString("th-TH")}</span>
@@ -191,7 +180,7 @@ export default function RedeemedRewardList({ userId, status = "unused" }) {
 
                                         <div className="flex justify-center items-center h-20">
                                             {reward.couponCode && !reward.isUsed && !isDisabled ? (
-                                                <span className="btn btn-sm bg-main-green text-white px-3 py-1 rounded flex items-center gap-1 text-sm shadow font-light">
+                                                <span className="btn btn-md bg-main-green text-white px-3 py-1 rounded-xl flex items-center gap-1 text-sm shadow font-light">
                                                     <BarcodeIcon className="w-4 h-4" />
                                                     แสดง Barcode
                                                 </span>
@@ -221,68 +210,142 @@ export default function RedeemedRewardList({ userId, status = "unused" }) {
                     )
                 }
 
-                {
-                    selectedReward && (
-                        <dialog ref={dialogRef} className="modal">
-                            <div className="modal-box max-w-xs p-0 rounded-2xl overflow-hidden shadow-xl border border-gray-300 bg-white">
-                                <div className="p-1">
+                {selectedReward && (
+                    <dialog ref={dialogRef} className="modal">
+                        <div className="modal-box p-0 max-w-sm mx-auto bg-bg rounded-3xl shadow-2xl border-0 overflow-hidden font-[Itim]
+                            max-h-[90vh] flex flex-col">
+                            {/* Hero Image + Gradient */}
+                            <div className="relative ">
+                                <figure>
                                     <img
                                         src={selectedReward.imageUrl}
-                                        alt="Reward"
-                                        className="w-full object-cover rounded-2xl"
+                                        alt={selectedReward.rewardName}
+                                        className="w-full h-full object-cover"
                                     />
-                                </div>
+                                </figure>
+                            </div>
 
-                                <div className="-mt-6 bg-white rounded-t-2xl z-10 relative shadow-inner max-h-[65vh] overflow-y-auto">
-                                    <div className="p-4">
-                                        <h3 className="text-lg font-bold text-main-green">
-                                            {selectedReward.rewardName}
-                                        </h3>
-                                        <p className="text-sm text-main-green whitespace-pre-wrap break-words">
+                            {/* Content */}
+                            <div className="px-6 pb-6 pt-3 space-y-5">
+
+                                {/* <div className="text-center space-y-2">
+                                    <h3 className="text-xl font-bold text-main-green leading-tight">{selectedReward.rewardName}</h3>
+                                    <div className="w-16 h-1 bg-main-orange rounded-full mx-auto"></div> 
+                                    <div className="max-h-24 overflow-auto text-start">
+                                        <p className="text-main-green/70 text-sm whitespace-pre-wrap">
                                             {selectedReward.description}
                                         </p>
                                     </div>
+                                </div> */}
+                                <div className="border-2 border-main-orange w-16 rounded-3xl mb-3 text-center mx-auto" />
 
-                                    <div className="px-4 pb-2 text-sm text-gray-800">
-                                        <p className="mb-1 font-medium">ระยะเวลาแลก:</p>
-                                        <p className="text-xs">
-                                            <span>ใช้ได้ถึง: {selectedReward.rewardType === 1 ? "ภายในเดือนเกิด" : new Date(selectedReward.endDate).toLocaleDateString("th-TH")}</span>
-                                        </p>
-                                    </div>
+                                <div className="space-y-3">
+                                    {/* <div className="card bg-white/60 shadow-sm border-0 mt-1">
+                                        <div className="card-body px-3 py-2 flex-row items-center gap-2">
+                                            <div className="w-8 h-8 rounded-full bg-main-orange flex items-center justify-center">
+                                                <Calendar className="w-4 h-4 text-white" />
+                                            </div>
+                                            <div className="flex text-left text-xs leading-tight">
+                                                <div className="font-medium text-main-green">ใช้ได้ถึง :</div>
+                                                <div className="font-medium text-main-green/60 ml-1">
+                                                    {selectedReward.rewardType === 1
+                                                        ? "ภายในเดือนเกิด"
+                                                        : new Date(selectedReward.endDate).toLocaleDateString("th-TH")}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> */}
+
+                                    {/* Coupon code (ถ้ามี) */}
                                     {selectedReward.couponCode && (
-                                        <div className="flex flex-col items-center py-4 border-t border-gray-200">
+                                        <div className="flex flex-col items-center py-2 border border-black border-dashed rounded-3xl bg-white">
                                             <Barcode
                                                 value={selectedReward.couponCode}
-                                                width={1}
+                                                width={1.5}
                                                 height={40}
-                                                displayValue={false}
+                                                displayValue={true}
                                             />
-                                            <p className="font-bold text-sm text-gray-700 mt-2">
+                                            {/* <p className="font-bold text-sm text-gray-700">
                                                 {selectedReward.couponCode}
-                                            </p>
+                                            </p> */}
                                         </div>
                                     )}
+                                </div>
 
-                                    <div className="flex justify-center items-center p-4 border-t border-gray-200">
-                                        <button
-                                            type="button"
-                                            className="btn btn-outline btn-error text-sm w-2/3"
-                                            onClick={closeModal}
-                                        >
-                                            ปิด
-                                        </button>
-                                    </div>
+                                {/* Buttons */}
+                                <div className="flex gap-3">
+                                    <button
+                                        type="button"
+                                        className="btn btn-outline flex-1 rounded-2xl border-2 border-main-green text-main-green hover:bg-main-green/10"
+                                        onClick={closeModal}
+                                    >
+                                        ปิด
+                                    </button>
                                 </div>
                             </div>
+                        </div>
 
-                            <form method="dialog" className="modal-backdrop">
-                                <button>close</button>
-                            </form>
-                        </dialog>
-                    )
-                }
+                        {/* Backdrop */}
+                        <form method="dialog" className="modal-backdrop">
+                            <button>close</button>
+                        </form>
+                    </dialog>
+                )}
+
             </div >
             <Pagination currentPage={page} totalPages={totalItem} onPageChange={setPage} loading={loading} />
+            <motion.div
+                className={`fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/30 ${showSuccessModal ? '' : 'pointer-events-none'}`}
+                initial={false}
+                animate={{ opacity: showSuccessModal ? 1 : 0 }}
+                transition={{ duration: 0.3 }}
+            >
+                <div
+                    className="modal-box max-w-sm bg-gradient-to-br from-white to-gray-50 rounded-3xl text-center shadow-2xl border-2 border-green-100 relative overflow-hidden"
+                    style={{
+                        opacity: showSuccessModal ? 1 : 0,
+                        transform: showSuccessModal ? 'scale(1) translateY(0)' : 'scale(0.8) translateY(50px)',
+                        transition: 'opacity 0.4s ease, transform 0.4s ease',
+                    }}
+                >
+                    {/* Background decoration */}
+                    <div className="absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br from-green-200 to-green-300 rounded-full opacity-20"></div>
+                    <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-gradient-to-br from-green-200 to-green-300 rounded-full opacity-20"></div>
+
+                    {/* Success icon */}
+                    <div className="relative z-10 mb-6">
+                        <div className="bg-white border-2 border-main-green w-20 h-20 rounded-full flex items-center justify-center mx-auto shadow-lg">
+                            <img src="loading.gif" className="w-full h-full" alt="success" />
+                        </div>
+                    </div>
+
+                    {/* Success text */}
+                    <div className="relative z-10">
+                        <h2 className="text-2xl font-bold text-gray-800 mb-2">ใช้คูปองสำเร็จ !</h2>
+                    </div>
+
+                    {/* Decorative divider */}
+                    <div className="relative z-10 my-6">
+                        <div className="flex items-center justify-center">
+                            <div className="flex-1 border-t-2 border-dashed border-main-orange"></div>
+                            <div className="mx-4 w-12 h-12 flex justify-center items-center">
+                                <Check className="w-full h-full text-main-green" />
+                            </div>
+                            <div className="flex-1 border-t-2 border-dashed border-main-orange"></div>
+                        </div>
+                    </div>
+
+                    {/* Close button */}
+                    <div className="relative z-10">
+                        <button
+                            className="btn btn-lg bg-main-green text-white font-semibold px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95"
+                            onClick={() => setShowSuccessModal(false)}
+                        >
+                            เรียบร้อย !
+                        </button>
+                    </div>
+                </div>
+            </motion.div>
 
         </>
     );

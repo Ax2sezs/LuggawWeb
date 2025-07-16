@@ -61,6 +61,7 @@ export default function App() {
     fetchPoints,
     isLoading,
     points,
+    expire,
   } = useLineAuth();
 
   useEffect(() => {
@@ -141,6 +142,7 @@ export default function App() {
                   logout={logout}
                   fetchPoints={fetchPoints}
                   points={points}
+                  expire={expire}
                 />
               )
             }

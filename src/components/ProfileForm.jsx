@@ -99,7 +99,7 @@ export default function ProfileForm({ formData, setFormData, onSubmit }) {
                 {/* เพศ */}
                 <div className="mb-6">
                     <label className="label">
-                        <span className="label-text font-medium text-main-green">
+                        <span className="label-text font-medium text-main-green text-center">
                             เพศ
                         </span>
                     </label>

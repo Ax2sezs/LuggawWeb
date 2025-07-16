@@ -102,32 +102,76 @@ export default function RewardList({ reloadPoints }) {
                 ))}
 
             </div>
-            {showSuccessModal && (
-                <motion.dialog
-                    open
-                    className="modal"
-                // initial={{ opacity: 0, scale: 0.95 }}
-                // animate={{ opacity: 1, scale: 1 }}
-                // exit={{ opacity: 0, scale: 0.95 }}
-                // transition={{ duration: 0.25 }}
+            <motion.div
+                className={`fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/30 ${showSuccessModal ? '' : 'pointer-events-none'}`}
+                initial={false}
+                animate={{ opacity: showSuccessModal ? 1 : 0 }}
+                transition={{ duration: 0.3 }}
+            >
+                <div
+                    className="modal-box max-w-sm bg-gradient-to-br from-white to-gray-50 rounded-3xl text-center shadow-2xl border-2 border-green-100 relative overflow-hidden"
+                    style={{
+                        opacity: showSuccessModal ? 1 : 0,
+                        transform: showSuccessModal ? 'scale(1) translateY(0)' : 'scale(0.8) translateY(50px)',
+                        transition: 'opacity 0.4s ease, transform 0.4s ease',
+                    }}
                 >
-                    <div className="modal-box max-w-sm bg-white rounded-2xl text-center">
-                        <Gift className="mx-auto text-green-600 w-16 h-16 mb-4" />
-                        <h2 className="text-xl font-semibold text-black">แลกของรางวัลสำเร็จ!</h2>
-                        <p className="text-gray-600 mt-2">โปรดตรวจสอบในหน้า Redeemed</p>
-                        <div className="border-dashed border-gray-200 border-2 mx-5 my-5"></div>
+                    {/* Background decoration */}
+                    <div className="absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br from-green-200 to-green-300 rounded-full opacity-20"></div>
+                    <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-gradient-to-br from-green-200 to-green-300 rounded-full opacity-20"></div>
 
-                        <div className="mt-4">
-                            <button
-                                className="btn border-main-green btn-outline text-main-green w-1/3 text-lg hover:bg-main-green hover:text-bg"
-                                onClick={() => setShowSuccessModal(false)}
-                            >
-                                ปิด
-                            </button>
+                    {/* Success icon */}
+                    <div className="relative z-10 mb-6">
+                        <div className="bg-main-green w-20 h-20 rounded-full flex items-center justify-center mx-auto shadow-lg">
+                            <Gift className="text-white w-10 h-10" />
+                        </div>
+
+                        {/* Celebration sparkles */}
+                        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 text-yellow-400 text-2xl">
+                            ✨
+                        </div>
+                        <div className="absolute top-2 right-6 text-yellow-400 text-lg">
+                            ✨
+                        </div>
+                        <div className="absolute top-2 left-6 text-yellow-400 text-lg">
+                            ✨
                         </div>
                     </div>
-                </motion.dialog>
-            )}
+
+                    {/* Success text */}
+                    <div className="relative z-10">
+                        <h2 className="text-2xl font-bold text-gray-800 mb-2">
+                            แลกของรางวัลสำเร็จ!
+                        </h2>
+                        <p className="text-gray-600 text-base mb-6">
+                            โปรดตรวจสอบในหน้า <span className="font-semibold text-main-green">Redeemed</span>
+                        </p>
+                    </div>
+
+                    {/* Decorative divider */}
+                    <div className="relative z-10 my-6">
+                        <div className="flex items-center justify-center">
+                            <div className="flex-1 border-t-2 border-dashed border-main-orange"></div>
+                            <div className="mx-4 w-16 h-16">
+                                <img src="logo.png" className="object-cover w-full h-full" loading="eager" />
+                            </div>
+                            <div className="flex-1 border-t-2 border-dashed border-main-orange"></div>
+                        </div>
+                    </div>
+
+                    {/* Close button */}
+                    <div className="relative z-10">
+                        <button
+                            className="btn btn-lg bg-main-green text-white font-semibold px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95"
+                            onClick={() => setShowSuccessModal(false)}
+                        >
+                            เรียบร้อย !
+                        </button>
+                    </div>
+                </div>
+            </motion.div>
+
+
 
 
         </>

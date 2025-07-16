@@ -16,6 +16,7 @@ export default function useLineAuth() {
   const [isProfileCompleted, setIsProfileCompleted] = useState(null);
   const [active, setActive] = useState(false);
   const [points, setPoints] = useState(0);
+  const [expire,setExpire] = useState('')
   const [loadingPoints, setLoadingPoints] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const hasRequested = useRef(false);
@@ -89,7 +90,8 @@ export default function useLineAuth() {
     setLoadingPoints(true);
     try {
       const res = await getUserPoints();
-      setPoints(res.data.totalPoints);
+      setPoints(res.data.userTotalPoint);
+      setExpire(res.data.expirePoint)
     } catch (err) {
       // setError(err.message); // optional
     } finally {
@@ -114,6 +116,7 @@ export default function useLineAuth() {
     setIsProfileCompleted,
     logout,
     points,
+    expire,
     loadingPoints,
     isLoading,
     fetchPoints,
