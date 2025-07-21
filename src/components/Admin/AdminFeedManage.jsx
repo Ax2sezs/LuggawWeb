@@ -7,6 +7,7 @@ import FilterBar from "../FilterBar";
 import Pagination from "../Pagination";
 import AdminTable from "./AdminTable";
 import Loading from "../Loading";
+import { getFullImageUrl } from "../../utils/getFullImageUrl";
 
 export default function AdminFeedManage() {
     const {
@@ -95,7 +96,7 @@ export default function AdminFeedManage() {
             key: "image",
             render: (feed) =>
                 feed.imageUrls?.[0]?.url ? (
-                    <img src={feed.imageUrls[0].url} className="h-24 w-24 object-cover rounded" />
+                    <img src={getFullImageUrl(feed.imageUrls[0].url)} className="h-24 w-24 object-cover rounded" />
                 ) : (
                     <div className="h-24 w-24 bg-gray-200 flex items-center justify-center rounded text-gray-400">No Image</div>
                 ),

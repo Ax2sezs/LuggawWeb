@@ -37,7 +37,7 @@ export default function useAdminLogin() {
                 username: data.username,
                 fullName: data.fullName,
             }));
-                return data; // <-- เพิ่ม return ตรงนี้
+            return data; // <-- เพิ่ม return ตรงนี้
 
         } catch (err) {
             setError(err.response?.data?.message || err.message || "Login failed");
@@ -54,6 +54,8 @@ export default function useAdminLogin() {
         setAdminUser(null);
         localStorage.removeItem("admin_token");
         localStorage.removeItem("admin_user");
+        window.location.href = "/";
+
     };
 
     return {

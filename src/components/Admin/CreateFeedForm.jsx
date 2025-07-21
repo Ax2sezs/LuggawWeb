@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import useAdmin from "../../hooks/useAdmin";
 import { XCircle } from "lucide-react";
 import toast from "react-hot-toast";
+import { getFullImageUrl } from "../../utils/getFullImageUrl";
 
 
 export default function CreateFeedForm() {
@@ -177,7 +178,7 @@ export default function CreateFeedForm() {
                     <div className="grid grid-cols-3 gap-4 w-full mt-5">
                         {form.imagePreviews.map((previewUrl, index) => (
                             <div key={index} className="relative w-64 h-64 border rounded overflow-hidden">
-                                <img src={previewUrl} alt={`preview-${index}`} className="w-full h-full object-cover" />
+                                <img src={getFullImageUrl(previewUrl)} alt={`preview-${index}`} className="w-full h-full object-cover" />
                                 <button
                                     type="button"
                                     onClick={() => handleRemoveImage(index)}

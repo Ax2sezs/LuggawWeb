@@ -6,6 +6,7 @@ import HomePage from "./components/HomePage";
 import RewardList from "./components/RewardList";
 import RedeemedRewardsTabs from "./components/RedeemedRewardsTabs";
 import TransactionList from "./components/TransactionList";
+import EditPhoneModal from "./components/Modals/EditPhoneModal";
 
 const tabs = [
   { key: "home", label: "Home", icon: <Gift className="w-4 h-4 mr-1" /> },
@@ -13,7 +14,8 @@ const tabs = [
   { key: "redeemed", label: "Redeemed", icon: <CheckCircle className="w-4 h-4 mr-1" /> },
 ];
 
-export default function MainAppLayout({ user, logout, fetchPoints, points, expire }) {
+export default function MainAppLayout({ user, logout, fetchPoints, points, expire, fetchUpdatePhoneNumber }) {
+  const [showEditModal, setShowEditModal] = useState(false)
   const [activeView, setActiveView] = useState("home");
   const activeIndex = tabs.findIndex((tab) => tab.key === activeView);
 
@@ -37,7 +39,14 @@ export default function MainAppLayout({ user, logout, fetchPoints, points, expir
       className={`shadow-lg w-full text-center min-h-screen flex flex-col ${activeView === "home" ? "bg-white" : "bg-sub-brown"
         }`}
     >
-      <UserProfile user={user} points={points} expire={expire} onLogout={logout} onShowTransactions={() => setActiveView("transaction")} />
+      <UserProfile
+        user={user}
+        points={points}
+        expire={expire}
+        onLogout={logout}
+        onShowTransactions={() => setActiveView("transaction")}
+        onUpdatePhoneNumberTrigger={() => setShowEditModal(true)} // ✅ แก้ตรงนี้
+      />
 
       <div className="flex-1 overflow-auto mb-12 -mt-8 relative">
         <AnimatePresence mode="wait">
@@ -76,6 +85,15 @@ export default function MainAppLayout({ user, logout, fetchPoints, points, expir
           </button>
         ))}
       </nav>
+      <EditPhoneModal
+        isOpen={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        onSave={(newPhone) => {
+          fetchUpdatePhoneNumber(newPhone);
+          setShowEditModal(false);
+        }}
+        initialPhone={user.phoneNumber}
+      />
     </div>
   );
 }

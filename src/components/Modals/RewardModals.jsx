@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import { Gift, Calendar } from "lucide-react";
+import { getFullImageUrl } from "../../utils/getFullImageUrl";
 
 export function ConfirmRedeemModal({ reward, isOpen, onClose, onConfirm }) {
     const dialogRef = useRef(null);
@@ -47,7 +48,7 @@ export function ConfirmRedeemModal({ reward, isOpen, onClose, onConfirm }) {
                         <img
                             src={reward.imageUrl}
                             alt={reward.rewardName}
-                            className="w-full h-auto object-cover"
+                            className="w-full max-h-96 object-cover"
                         />
                     </figure>
                 </div>
@@ -61,7 +62,7 @@ export function ConfirmRedeemModal({ reward, isOpen, onClose, onConfirm }) {
                         {/* <div className="w-16 h-1 bg-main-orange rounded-full mx-auto"></div> */}
                         <div className="max-h-24 overflow-auto text-start">
                             <p className="text-main-green text-sm whitespace-pre-wrap">
-                                {reward.description.replace(/\\n/g, "\n")}
+                                {reward.description}
                             </p>
                         </div>
                     </div>

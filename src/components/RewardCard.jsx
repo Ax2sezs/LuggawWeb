@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { CheckCircle, Gift, Star, CalendarDays, Cake, BadgeAlert } from "lucide-react";
 import useLineAuth from "../hooks/useLineAuth";  // ปรับ path ตามจริง
 import { ConfirmRedeemModal } from "./Modals/RewardModals";
+import { getFullImageUrl } from "../utils/getFullImageUrl";
 
 export default function RewardCard({ reward, onRedeem, onPointsUpdate, points }) {
     const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -27,7 +28,7 @@ export default function RewardCard({ reward, onRedeem, onPointsUpdate, points })
     return (
         <>
             {/* การ์ดรางวัล */}
-            <div className="flex w-full max-w-3xl bg-bg shadow-lg rounded-2xl overflow-hidden relative border border-dashed border-black">
+            <div className="flex w-full max-w-3xl h-40 bg-bg shadow-lg rounded-2xl overflow-hidden relative border border-dashed border-black">
                 {reward.rewardType === 1 && (
                     <div className="absolute top-0 left-0 z-30 ">
                         <div className="flex items-center gap-2 bg-pink-600 text-white text-xs px-3 py-1 rounded-br-lg shadow-md font-semibold">

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Barcode from "react-barcode";
 import { Pencil } from "lucide-react";
-
+import { getFullImageUrl } from "../../utils/getFullImageUrl";
 
 
 export default function RewardForm({ initialData, onCancel, onSave }) {
@@ -63,7 +63,7 @@ export default function RewardForm({ initialData, onCancel, onSave }) {
                 <div className="relative w-52 h-52 bg-red-500">
                     {form.imagePreview && (
                         <img
-                            src={form.imagePreview}
+                            src={getFullImageUrl(form.imagePreview)}
                             alt="Preview"
                             className="w-full h-full object-cover rounded"
                         />

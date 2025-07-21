@@ -36,8 +36,8 @@ export default function ProfileForm({ formData, setFormData, onSubmit }) {
 
     return (
         <div className="flex flex-col justify-center items-center">
-            <div className="flex justify-center">
-                <img src="./logo.png" className="w-2/3 h-auto -mb-7" />
+            <div className="flex justify-center w-2/3 h-auto -mb-7">
+                <img src="./logo.png" className="" />
             </div>
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -75,9 +75,9 @@ export default function ProfileForm({ formData, setFormData, onSubmit }) {
 
                 {/* วันเกิด */}
                 <div className="form-control mb-5 w-full flex flex-col">
-                    <label className="label">
-                        <span className="label-text font-medium text-main-green text-center">วันเกิด</span>
-                    </label>
+                       <span className="label-text font-medium text-main-green text-center">
+                            วันเกิด
+                        </span>
                     <DatePicker
                         selected={birthDateValue}
                         onChange={(date) =>

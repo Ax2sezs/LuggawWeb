@@ -201,7 +201,6 @@ export default function RedeemedRewardList({ userId, status = "unused" }) {
                         );
                     })}
 
-
                 {
                     selectedReward?.isUsed && (
                         <div className="text-red-600 text-center font-semibold text-sm">
@@ -220,7 +219,7 @@ export default function RedeemedRewardList({ userId, status = "unused" }) {
                                     <img
                                         src={selectedReward.imageUrl}
                                         alt={selectedReward.rewardName}
-                                        className="w-full h-full object-cover"
+                                        className="w-full max-h-96 object-cover"
                                     />
                                 </figure>
                             </div>

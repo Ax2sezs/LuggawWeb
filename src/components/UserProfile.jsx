@@ -1,6 +1,8 @@
-import { History } from "lucide-react"; // นำเข้า icon
+import { History, Menu, Phone, LogOut } from "lucide-react"; // นำเข้า icon
+import EditPhoneModal from "./Modals/EditPhoneModal";
+import { useState } from "react";
 
-export default function UserProfile({ user, points, expire, onLogout, onShowTransactions }) {
+export default function UserProfile({ user, points, expire, onLogout, onShowTransactions, onUpdatePhoneNumberTrigger }) {
     function formatExpireDate(expireString) {
         if (!expireString) {
             return ''; // หรือคืนค่าว่างเปล่า หรือค่าที่คุณต้องการหากไม่มีข้อมูล
@@ -42,31 +44,58 @@ export default function UserProfile({ user, points, expire, onLogout, onShowTran
                         />
                         <div className="flex flex-col text-start">
                             <span className="text-lg font-bold">สวัสดีคุณ {user.displayName}</span>
+
                             <div className="flex items-center gap-2 text-yellow-200 font-semibold">
-                                <span>{points} คะแนน</span>
+                                {points !== undefined && points !== null ? (
+                                    <span>{points} คะแนน</span>
+                                ) : (
+                                    <span className="loading loading-spinner loading-xs"></span>
+                                )}
                             </div>
-                            <span className="text-xs text-bg">หมดอายุใน {formattedDate}</span>
+
+                            <span className="text-xs text-bg">
+                                หมดอายุใน{" "}
+                                {formattedDate ? (
+                                    formattedDate
+                                ) : (
+                                    <span className="loading loading-spinner loading-xs"></span>
+                                )}
+                            </span>
                         </div>
                     </div>
 
-                    {/* Logout Button */}
-                    <div className="flex flex-col justify-between gap-3">
-                        <button
-                            onClick={onLogout}
-                            className="text-xs bg-sub-brown text-main-brown font-semibold px-4 py-2 rounded-2xl hover:bg-main-brown hover:text-sub-brown transition"
-                        >
-                            LOGOUT
+                    {/* Hamburger Menu */}
+                    <div className="dropdown dropdown-end z-50 relative">
+                        <button tabIndex={0} className="btn btn-ghost btn-circle text-white">
+                            <Menu />
                         </button>
-                        <button className="flex gap-2" onClick={onShowTransactions}
+                        <ul
+                            tabIndex={0}
+                            className="dropdown-content menu p-2 shadow bg-white text-black rounded-box w-48 absolute z-50"
                         >
-                            <History color="#fbf9f3" />History
-                        </button>
+                            <li>
+                                <button onClick={onUpdatePhoneNumberTrigger} className="flex items-center gap-2">
+                                    <Phone size={16} /> แก้ไขเบอร์โทร
+                                </button>
+                            </li>
+                            <li>
+                                <button onClick={onShowTransactions} className="flex items-center gap-2">
+                                    <History size={16} /> ประวัติการใช้งาน
+                                </button>
+                            </li>
+                            <div className="border border-main-orange my-2" />
+                            <li>
+                                <button onClick={onLogout} className="flex items-center gap-2 text-red-600">
+                                    <LogOut size={16} /> Logout
+                                </button>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
 
-            Decorative wave
-            <div className="-mt-10">
+            {/* Decorative wave */}
+            <div className="-mt-4">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
                     <path
                         fill="#194829"

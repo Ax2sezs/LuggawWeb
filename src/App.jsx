@@ -9,13 +9,11 @@ import {
 } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 
-import useLineAuth from "./hooks/useLineAuth";
+// flag นี้ใช้สลับโหมด true = admin, false = user
+const adminMode = import.meta.env.VITE_APP_MODE === "admin";
+
+// ───────────────────────── ADMIN MODE ─────────────────────────
 import useAdminLogin from "./hooks/useAdminLogin";
-
-import LoginScreen from "./pages/LoginScreen";
-import ProfileFormScreen from "./pages/ProfileFormScreen";
-import MainAppLayout from "./MainLayout";
-
 import AdminUsers from "./components/Admin/AdminUsers";
 import AdminHome from "./components/Admin/AdminHome";
 import AdminReward from "./components/Admin/AdminReward";
@@ -25,11 +23,15 @@ import CreateRewardForm from "./components/Admin/CreateRewardForm";
 import AdminFeedManage from "./components/Admin/AdminFeedManage";
 import CreateFeedForm from "./components/Admin/CreateFeedForm";
 import AdminTransaction from "./components/Admin/AdminTransaction";
-
-import CallbackHandler from "./components/CallbackHandler";
-
-import { clearAuthData } from "./utils/auth";
 import AdminLogin from "./components/Admin/AdminLogin";
+
+// ───────────────────────── USER MODE ─────────────────────────
+import useLineAuth from "./hooks/useLineAuth";
+import LoginScreen from "./pages/LoginScreen";
+import ProfileFormScreen from "./pages/ProfileFormScreen";
+import MainAppLayout from "./MainLayout";
+import CallbackHandler from "./components/CallbackHandler";
+import { clearAuthData } from "./utils/auth";
 
 function ProtectedAdminRoute() {
   const { adminUser, loading } = useAdminLogin();
@@ -51,6 +53,35 @@ function ProtectedAdminRoute() {
 }
 
 export default function App() {
+  if (adminMode) {
+    // ─────────────── Admin Mode ───────────────
+    return (
+      <>
+        <Toaster position="top-right" reverseOrder={false} />
+        <Router>
+          <Routes>
+            <Route path="/admin/login" element={<AdminLogin isLoginPage={true} />} />
+            <Route path="/admin/*" element={<ProtectedAdminRoute />}>
+              <Route element={<AdminLayout />}>
+                <Route index element={<AdminHome />} />
+                <Route path="users" element={<AdminUsers />} />
+                <Route path="reward" element={<AdminReward />} />
+                <Route path="reward/edit/:rewardId" element={<RewardManagement />} />
+                <Route path="reward/create" element={<CreateRewardForm />} />
+                <Route path="feed" element={<AdminFeedManage />} />
+                <Route path="feed/create" element={<CreateFeedForm />} />
+                <Route path="feed/edit/:feedId" element={<CreateFeedForm />} />
+                <Route path="transactions" element={<AdminTransaction />} />
+              </Route>
+            </Route>
+            <Route path="*" element={<Navigate to="/admin" replace />} />
+          </Routes>
+        </Router>
+      </>
+    );
+  }
+
+  // ─────────────── User Mode ───────────────
   const {
     user,
     error,
@@ -59,6 +90,7 @@ export default function App() {
     logout,
     setError,
     fetchPoints,
+    fetchUpdatePhoneNumber,
     isLoading,
     points,
     expire,
@@ -68,15 +100,11 @@ export default function App() {
     const interval = setInterval(() => {
       console.log("🔒 ล้าง localStorage ทุก 30 นาที");
       clearAuthData();
-      window.location.href = "/"; // redirect ไปหน้า login
-    }, 30 * 60 * 1000); // 30 นาที
+      window.location.href = "/";
+    }, 30 * 60 * 1000);
 
-    return () => clearInterval(interval); // เคลียร์เมื่อ component unmount
+    return () => clearInterval(interval);
   }, []);
-
-  useEffect(() => {
-    console.log("isProfileCompleted", isProfileCompleted);
-  }, [isProfileCompleted]);
 
   if (isLoading) {
     return (
@@ -90,10 +118,8 @@ export default function App() {
   return (
     <>
       <Toaster position="top-right" reverseOrder={false} />
-
       <Router>
         <Routes>
-          {/* หน้าแรก */}
           <Route
             path="/"
             element={
@@ -125,10 +151,7 @@ export default function App() {
             }
           />
 
-          {/* หน้า callback LINE */}
           <Route path="/callback" element={<CallbackHandler />} />
-
-          {/* หน้า home */}
           <Route
             path="/home"
             element={
@@ -143,33 +166,12 @@ export default function App() {
                   fetchPoints={fetchPoints}
                   points={points}
                   expire={expire}
+                  fetchUpdatePhoneNumber={fetchUpdatePhoneNumber}
                 />
               )
             }
           />
-
-          {/* หน้า inactive */}
           <Route path="/inactive" element={<div>บัญชีคุณยังไม่เปิดใช้งาน</div>} />
-
-          {/* หน้า admin login (แยก) */}
-          <Route path="/admin/login" element={<AdminLogin isLoginPage={true} />} />
-
-          {/* หน้า admin protected */}
-          <Route path="/admin/*" element={<ProtectedAdminRoute />}>
-            <Route element={<AdminLayout />}>
-              <Route index element={<AdminHome />} />
-              <Route path="users" element={<AdminUsers />} />
-              <Route path="reward" element={<AdminReward />} />
-              <Route path="reward/edit/:rewardId" element={<RewardManagement />} />
-              <Route path="reward/create" element={<CreateRewardForm />} />
-              <Route path="feed" element={<AdminFeedManage />} />
-              <Route path="feed/create" element={<CreateFeedForm />} />
-              <Route path="feed/edit/:feedId" element={<CreateFeedForm />} />
-              <Route path="transactions" element={<AdminTransaction />} />
-            </Route>
-          </Route>
-
-          {/* fallback หน้าอื่นๆ */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Router>

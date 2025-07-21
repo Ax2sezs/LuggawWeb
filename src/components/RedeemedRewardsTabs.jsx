@@ -19,7 +19,7 @@ export default function RedeemedRewardsTabs({ userId }) {
           <button
             key={key}
             onClick={() => setActiveStatus(key)}
-            className={`relative z-10 px-5 py-2 rounded-full text-sm font-medium transition-colors duration-200 ${
+            className={`relative z-0 px-5 py-2 rounded-full text-sm font-medium transition-colors duration-200 ${
               activeStatus === key
                 ? "text-white"
                 : "text-gray-600 hover:text-main-green"

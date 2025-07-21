@@ -26,3 +26,6 @@ export const getUserPoints = () => {
   return api.get("Points/points") 
 }
 
+export const updatePhoneNumber = (data) => {
+  return api.post("LineLogin/edit-phone",data)
+}

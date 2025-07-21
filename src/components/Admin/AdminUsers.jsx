@@ -101,13 +101,13 @@ function AdminUsers() {
       header: "Gender",
       key: "gender",
     },
-    {
-      header: "Points",
-      key: "point",
-      sortable: true,
-      onSort: handleSort,
-      sortState: sortConfig,
-    },
+    // {
+    //   header: "Points",
+    //   key: "point",
+    //   sortable: true,
+    //   onSort: handleSort,
+    //   sortState: sortConfig,
+    // },
     {
       header: "Created At",
       key: "createdAt",

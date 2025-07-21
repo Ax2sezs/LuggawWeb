@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import {
   handleLineCallback,
   getUserPoints,
+  updatePhoneNumber,
 } from "../api/lineLoginAPI";
 import {
   getStoredUser,
@@ -15,8 +16,8 @@ export default function useLineAuth() {
   const [error, setError] = useState();
   const [isProfileCompleted, setIsProfileCompleted] = useState(null);
   const [active, setActive] = useState(false);
-  const [points, setPoints] = useState(0);
-  const [expire,setExpire] = useState('')
+  const [points, setPoints] = useState();
+  const [expire, setExpire] = useState('')
   const [loadingPoints, setLoadingPoints] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const hasRequested = useRef(false);
@@ -99,6 +100,26 @@ export default function useLineAuth() {
     }
   };
 
+  const fetchUpdatePhoneNumber = async (newPhone) => {
+  setIsLoading(true);
+  try {
+    const data = await updatePhoneNumber({ newPhoneNumber: newPhone });
+    toast.success("อัปเดตเบอร์โทรเรียบร้อยแล้ว");
+
+    const updatedUser = { ...user, newPhoneNumber: newPhone };
+    setUser(updatedUser);
+    saveUserData(updatedUser);
+    fetchPoints(); // อัปเดตแต้มและ expire ใหม่
+  } catch (error) {
+    console.error("Error updating phone:", error);
+    toast.error("เกิดข้อผิดพลาดในการอัปเดตเบอร์โทร");
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+
+
   // ✅ ฟังก์ชัน logout
   const logout = () => {
     setUser(null);
@@ -120,5 +141,6 @@ export default function useLineAuth() {
     loadingPoints,
     isLoading,
     fetchPoints,
+    fetchUpdatePhoneNumber,
   };
 }

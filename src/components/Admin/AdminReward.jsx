@@ -7,6 +7,7 @@ import FilterBar from "../FilterBar";
 import Pagination from "../Pagination";
 import Loading from "../Loading";
 import AdminTable from "./AdminTable";
+import { getFullImageUrl } from "../../utils/getFullImageUrl";
 
 export default function AdminReward() {
   const {
@@ -88,7 +89,7 @@ export default function AdminReward() {
       key: "image",
       render: (reward) => (
         <img
-          src={reward.imageUrl}
+          src={getFullImageUrl(reward.imageUrl)}
           alt={reward.rewardName}
           className="h-24 w-24 object-cover rounded"
         />
