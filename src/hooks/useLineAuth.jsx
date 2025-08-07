@@ -3,6 +3,7 @@ import {
   handleLineCallback,
   getUserPoints,
   updatePhoneNumber,
+  checkPhone,
 } from "../api/lineLoginAPI";
 import {
   getStoredUser,
@@ -10,6 +11,7 @@ import {
   saveToken,
   clearAuthData,
 } from "../utils/auth";
+import toast from "react-hot-toast";
 
 export default function useLineAuth() {
   const [user, setUser] = useState(null);
@@ -18,9 +20,15 @@ export default function useLineAuth() {
   const [active, setActive] = useState(false);
   const [points, setPoints] = useState();
   const [expire, setExpire] = useState('')
+  const [expireLastYear, setExpireLastYear] = useState('')
+  const [pointLastYear, setPointLastYear] = useState()
+  const [isChecking, setIsChecking] = useState(false);
+  const [isUsed, setIsUsed] = useState(null); // true, false, หรือ null
   const [loadingPoints, setLoadingPoints] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+  const [phoneNumber, setPhoneNumber] = useState("")
   const hasRequested = useRef(false);
+
 
   // 🚀 โหลด user จาก localStorage ตอนโหลดหน้า
   useEffect(() => {
@@ -68,7 +76,6 @@ export default function useLineAuth() {
 
         setIsProfileCompleted(newUser.isCompleted);
         setActive(!newUser.isActive);
-        setIsLoading(false);
       })
       .catch((err) => {
         setError(err.response?.data?.error || err.message);
@@ -76,12 +83,11 @@ export default function useLineAuth() {
       }).finally(() => {
         setIsLoading(false)
       })
-
   }, []);
 
   // 🚀 ดึงแต้มเมื่อมี user
   useEffect(() => {
-    if (user?.userId) {
+    if (user?.token) {
       fetchPoints();
     }
   }, [user]);
@@ -93,6 +99,9 @@ export default function useLineAuth() {
       const res = await getUserPoints();
       setPoints(res.data.userTotalPoint);
       setExpire(res.data.expirePoint)
+      setPointLastYear(res.data.userPointLastYear)
+      setExpireLastYear(res.data.expirePointLastYear)
+      console.log("Set Points done :", res.data.userTotalPoint)
     } catch (err) {
       // setError(err.message); // optional
     } finally {
@@ -100,25 +109,46 @@ export default function useLineAuth() {
     }
   };
 
-  const fetchUpdatePhoneNumber = async (newPhone) => {
-  setIsLoading(true);
-  try {
-    const data = await updatePhoneNumber({ newPhoneNumber: newPhone });
-    toast.success("อัปเดตเบอร์โทรเรียบร้อยแล้ว");
+  const fetchUpdatePhoneNumber = async (oldPhone, newPhone) => {
+    setIsLoading(true);
+    try {
+      const data = await updatePhoneNumber({
+        oldPhone: oldPhone,
+        newPhone: newPhone
+      });
+      toast.success("อัปเดตเบอร์โทรเรียบร้อยแล้ว");
 
-    const updatedUser = { ...user, newPhoneNumber: newPhone };
-    setUser(updatedUser);
-    saveUserData(updatedUser);
-    fetchPoints(); // อัปเดตแต้มและ expire ใหม่
-  } catch (error) {
-    console.error("Error updating phone:", error);
-    toast.error("เกิดข้อผิดพลาดในการอัปเดตเบอร์โทร");
-  } finally {
-    setIsLoading(false);
-  }
-};
+      const updatedUser = { ...user, newPhone: newPhone };
+      setUser(updatedUser);
+      saveUserData(updatedUser);
+      fetchPoints(); // อัปเดตแต้มและ expire ใหม่
+      setTimeout(() => [
+        logout()
+      ])
+    } catch (error) {
+      console.error("Error updating phone:", error);
+      toast.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-
+  const checkPhoneNumber = async (phone) => {
+    setIsChecking(true);
+    setError(null);
+    try {
+      const res = await checkPhone({ phone });
+      setIsUsed(res.data.isUsed);
+      return res?.data.isUsed ?? false;
+    } catch (err) {
+      console.error("Error checking phone:", err);
+      setError("ไม่สามารถตรวจสอบเบอร์ได้");
+      setIsUsed(null);
+      return null;
+    } finally {
+      setIsChecking(false);
+    }
+  };
 
   // ✅ ฟังก์ชัน logout
   const logout = () => {
@@ -138,9 +168,14 @@ export default function useLineAuth() {
     logout,
     points,
     expire,
+    pointLastYear,
+    expireLastYear,
     loadingPoints,
     isLoading,
     fetchPoints,
     fetchUpdatePhoneNumber,
+    checkPhoneNumber, // fn ที่เอาไปใช้ตอนกดตรวจสอบ
+    isChecking,
+    isUsed,
   };
 }

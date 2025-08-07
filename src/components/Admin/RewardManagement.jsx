@@ -5,6 +5,8 @@ import useAdmin from "../../hooks/useAdmin";
 import RewardForm from "./RewardForm";
 import toast from "react-hot-toast";
 import { form } from "motion/react-client";
+import { da } from "date-fns/locale";
+import { fromUnixTime } from "date-fns";
 
 
 export default function RewardManagement() {
@@ -29,6 +31,10 @@ export default function RewardManagement() {
                     endDate: data.endDate ? data.endDate.slice(0, 16) : "",
                     imageUrl: data.imageUrl,
                     rewardType: data.rewardType,
+                    discountMin: data.discountMin || "",
+                    discountMax: data.discountMax || "",
+                    discountPercent: data.discountPercent || "",
+                    discountType: data.discountType || "",
                 });
 
             } catch (err) {
@@ -48,6 +54,10 @@ export default function RewardManagement() {
         data.append("description", formData.description);
         data.append("couponCode", formData.couponCode);
         data.append("rewardType", formData.rewardType);
+        data.append("discountMax", formData.discountMax)
+        data.append("discountMin", formData.discountMin)
+        data.append("discountPercent", formData.discountPercent)
+        data.append("discountType", formData.discountType)
         if (formData.startDate) data.append("startDate", formData.startDate);
         if (formData.endDate) data.append("endDate", formData.endDate);
         if (formData.imageFile) data.append("imageFile", formData.imageFile);

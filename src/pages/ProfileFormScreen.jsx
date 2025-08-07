@@ -1,47 +1,72 @@
-import React, { useState ,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import ProfileForm from "../components/ProfileForm";
 import { submitUserProfile, checkUserProfile } from "../api/lineLoginAPI";
+import toast from "react-hot-toast";
+import OtpScreen from "./OtpScreen";
 
-export default function ProfileFormScreen({ user, setUser }) {
+export default function ProfileFormScreen({ user, setUser, error, fetchSendOtp, fetchVerifyOtp, verified, loading, refCode, token, otperror }) {
   const [profileForm, setProfileForm] = useState({
+    firstName: "",
+    lastName: "",
     phoneNumber: "",
     birthDate: "",
     gender: "",
-    isCompleted:true,
+    isCompleted: true,
     allowMarketing: false,
   });
+  const [isOtpOpen, setIsOtpOpen] = useState(false);
+  const [otpSentData, setOtpSentData] = useState(null); // เก็บ refCode, token หลังส่ง OTP
+  const [otpVerified, setOtpVerified] = useState(false);
 
   useEffect(() => {
-  console.log("เข้าหน้า ProfileFormScreen แล้ว");
-}, []);
+    console.log("เข้าหน้า ProfileFormScreen แล้ว");
+  }, []);
 
 
   const isValidPhoneNumber = (phone) => /^[0-9]{9,10}$/.test(phone);
 
   const handleProfileSubmit = async () => {
     if (!profileForm.phoneNumber || !profileForm.birthDate || !profileForm.gender) {
-      alert("กรุณากรอกข้อมูลให้ครบทุกช่อง", "error");
+      toast.error("กรุณากรอกข้อมูลให้ครบทุกช่อง");
       return;
     }
     if (!isValidPhoneNumber(profileForm.phoneNumber)) {
-      alert("กรุณากรอกเบอร์โทรให้ถูกต้อง (9-10 ตัวเลข)", "error");
+      toast.error("กรุณากรอกเบอร์โทรให้ถูกต้อง (9-10 ตัวเลข)");
       return;
     }
 
     try {
-      await submitUserProfile({ ...profileForm });
+      const res = await fetchSendOtp(profileForm.phoneNumber);
+      if (!res) {
+        toast.error("ส่ง OTP ไม่สำเร็จ");
+        return;
+      }
+      setOtpSentData({ refCode: res.refCode, token: res.token });
+      setIsOtpOpen(true); // เปิด modal OTP
+    } catch (error) {
+      toast.error("เกิดข้อผิดพลาดในการส่ง OTP");
+    }
+  };
+
+  // ฟังก์ชันที่เรียกเมื่อ OTP ถูกยืนยันสำเร็จจาก modal
+  const onOtpVerified = async () => {
+    try {
+      // บันทึกข้อมูลโปรไฟล์จริง
+      await submitUserProfile(profileForm);
       const updatedUser = { ...user, ...profileForm };
       setUser(updatedUser);
       localStorage.setItem("lineUser", JSON.stringify(updatedUser));
+      setOtpVerified(true);
 
-      const res = await checkUserProfile(user.lineUserId);
-      if (res.data?.hasProfile) {
+      toast.success("ยืนยัน OTP สำเร็จและบันทึกข้อมูลเรียบร้อย");
+
+      // ปิด modalหลังจากแสดงผลสำเร็จประมาณ 2 วิ
+      setTimeout(() => {
+        setIsOtpOpen(false);
         window.location.href = "/home";
-      } else {
-        alert("กรอกข้อมูลไม่ครบ กรุณาตรวจสอบอีกครั้ง", "error");
-      }
+      }, 2000);
     } catch (err) {
-      alert("เกิดข้อผิดพลาด: " + (err.response?.data || err.message), "error");
+      toast.error("บันทึกข้อมูลไม่สำเร็จ: " + (err.response?.data || err.message));
     }
   };
 
@@ -51,7 +76,20 @@ export default function ProfileFormScreen({ user, setUser }) {
         formData={profileForm}
         setFormData={setProfileForm}
         onSubmit={handleProfileSubmit}
+        error={error}
       />
+      {isOtpOpen && otpSentData && (
+        <OtpScreen
+          isOpen={isOtpOpen}
+          onClose={() => setIsOtpOpen(false)}
+          profileForm={profileForm}
+          fetchVerifyOtp={fetchVerifyOtp}
+          refCode={otpSentData.refCode}
+          token={otpSentData.token}
+          onOtpVerified={onOtpVerified}
+          otpVerified={otpVerified}
+        />
+      )}
     </div>
   );
 }

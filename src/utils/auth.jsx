@@ -6,7 +6,7 @@ export function getStoredUser() {
     if (!data) return null;
 
     const user = JSON.parse(data);
-    if (!user.userId || !user.phoneNumber) return null;
+    if (!user.token || !user.phoneNumber) return null;
 
     return user;
   } catch (err) {

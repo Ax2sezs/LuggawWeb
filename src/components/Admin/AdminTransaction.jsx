@@ -4,6 +4,7 @@ import useAdmin from "../../hooks/useAdmin";
 import Pagination from "../Pagination";
 import Loading from "../Loading";
 import AdminTable from "./AdminTable";
+import { RefreshCcw } from "lucide-react";
 
 export default function AdminTransaction() {
     const {
@@ -112,6 +113,10 @@ export default function AdminTransaction() {
             header: "คำอธิบาย",
             key: "description",
         },
+        {
+            header:"Branch Code",
+            key:"branchCode"
+        }
     ];
 
     return (
@@ -119,7 +124,7 @@ export default function AdminTransaction() {
             {/* 🔍 Transaction Filter */}
             <div className="flex flex-wrap items-end justify-between gap-4 mb-4 text-black">
                 <h1 className="text-2xl font-bold">Transaction Management</h1>
-                <button className="btn" onClick={fetchTransaction}>Fetch</button>
+                <button className="btn bg-main-orange border-hidden text-black" onClick={fetchTransaction}><RefreshCcw/>Fetch</button>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 w-full">
                     <input

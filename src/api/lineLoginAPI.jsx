@@ -23,9 +23,22 @@ export const handleLineCallback = (code) => {
 //   return api.get(`LineLogin/users/${userId}/points`);
 // };
 export const getUserPoints = () => {
-  return api.get("Points/points") 
+  return api.get("Points/points")
 }
 
 export const updatePhoneNumber = (data) => {
-  return api.post("LineLogin/edit-phone",data)
+  return api.post("LineLogin/update-phone", data)
+}
+export const checkPhone = (pn) => {
+  return api.post("LineLogin/check-phone", pn)
+}
+export const sendOtp = (phoneNumber) => {
+  return api.post("otp/send-otp", { phoneNumber })
+}
+export const verifyOtp = ({refCode,token,otp}) => {
+  return api.post("otp/verify-otp", { 
+    RefCode:refCode,
+    Token:token,
+    Otp:otp
+   })
 }

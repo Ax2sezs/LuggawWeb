@@ -1,8 +1,8 @@
-import { History, Menu, Phone, LogOut } from "lucide-react"; // นำเข้า icon
+import { History, Menu, Phone, LogOut, PersonStanding, AlertCircle, User } from "lucide-react"; // นำเข้า icon
 import EditPhoneModal from "./Modals/EditPhoneModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function UserProfile({ user, points, expire, onLogout, onShowTransactions, onUpdatePhoneNumberTrigger }) {
+export default function UserProfile({ user, points, expire, pointLastYear, expireLastYear, onLogout, onShowTransactions, onShowProfile, onUpdatePhoneNumberTrigger, fetchPoint }) {
     function formatExpireDate(expireString) {
         if (!expireString) {
             return ''; // หรือคืนค่าว่างเปล่า หรือค่าที่คุณต้องการหากไม่มีข้อมูล
@@ -29,7 +29,10 @@ export default function UserProfile({ user, points, expire, onLogout, onShowTran
         return `${day}/${month}/${year}`;
     }
     const formattedDate = formatExpireDate(expire);
-
+    useEffect(() => {
+        console.log("Profile Point : ", points)
+        points
+    }, [points])
     return (
         <div className="relative z-10">
             {/* Header background */}
@@ -47,14 +50,29 @@ export default function UserProfile({ user, points, expire, onLogout, onShowTran
 
                             <div className="flex items-center gap-2 text-yellow-200 font-semibold">
                                 {points !== undefined && points !== null ? (
-                                    <span>{points} คะแนน</span>
+                                    <div className="flex gap-2">
+                                        <span>{points} คะแนน</span>
+                                        <div
+                                            className="tooltip tooltip-warning"
+                                            data-tip={`คะแนน ${pointLastYear} จะหมดอายุใน ${new Date(expireLastYear).toLocaleDateString("th-TH", {
+                                                day: "2-digit",
+                                                month: "2-digit",
+                                                year: "numeric",
+                                                timeZone: "Asia/Bangkok"
+                                            })}`}                                        >
+                                            <button className="">
+                                                <AlertCircle size={18} />
+                                            </button>
+                                        </div>
+
+                                    </div>
+
                                 ) : (
                                     <span className="loading loading-spinner loading-xs"></span>
                                 )}
                             </div>
 
                             <span className="text-xs text-bg">
-                                หมดอายุใน{" "}
                                 {formattedDate ? (
                                     formattedDate
                                 ) : (
@@ -63,6 +81,7 @@ export default function UserProfile({ user, points, expire, onLogout, onShowTran
                             </span>
                         </div>
                     </div>
+
 
                     {/* Hamburger Menu */}
                     <div className="dropdown dropdown-end z-50 relative">
@@ -75,9 +94,14 @@ export default function UserProfile({ user, points, expire, onLogout, onShowTran
                         >
                             <li>
                                 <button onClick={onUpdatePhoneNumberTrigger} className="flex items-center gap-2">
-                                    <Phone size={16} /> แก้ไขเบอร์โทร
+                                    <User size={16} /> ข้อมูลของฉัน
                                 </button>
                             </li>
+                            {/* <li>
+                                <button onClick={onShowProfile} className="flex items-center gap-2">
+                                    <History size={16} /> ข้อมูลของฉัน
+                                </button>
+                            </li> */}
                             <li>
                                 <button onClick={onShowTransactions} className="flex items-center gap-2">
                                     <History size={16} /> ประวัติการใช้งาน

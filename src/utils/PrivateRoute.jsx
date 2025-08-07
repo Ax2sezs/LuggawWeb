@@ -11,7 +11,6 @@ export default function PrivateRoute({ children }) {
     return <Navigate to="/" replace />;
   }
 
-  // ✅ ห้าม redirect ถ้าอยู่ในหน้า complete-profile อยู่แล้ว
   if (!isProfileCompleted && !isOnCompleteProfilePage) {
     return <Navigate to="/complete-profile" replace />;
   }

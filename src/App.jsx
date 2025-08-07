@@ -27,6 +27,7 @@ import AdminLogin from "./components/Admin/AdminLogin";
 
 // ───────────────────────── USER MODE ─────────────────────────
 import useLineAuth from "./hooks/useLineAuth";
+import { useSendOtp } from "./hooks/useSendOtp";
 import LoginScreen from "./pages/LoginScreen";
 import ProfileFormScreen from "./pages/ProfileFormScreen";
 import MainAppLayout from "./MainLayout";
@@ -94,18 +95,26 @@ export default function App() {
     isLoading,
     points,
     expire,
+    pointLastYear,
+    expireLastYear,
   } = useLineAuth();
+  const {
+    fetchSendOtp,
+    fetchVerifyOtp,
+    verified,
+    loading,
+    refCode,
+    token,
+    otperror
+  } = useSendOtp()
 
   useEffect(() => {
     const interval = setInterval(() => {
-      console.log("🔒 ล้าง localStorage ทุก 30 นาที");
       clearAuthData();
       window.location.href = "/";
     }, 30 * 60 * 1000);
-
     return () => clearInterval(interval);
   }, []);
-
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen text-gray-600">
@@ -144,8 +153,18 @@ export default function App() {
               !user ? (
                 <Navigate to="/" replace />
               ) : isProfileCompleted === false ? (
-                <ProfileFormScreen user={user} setUser={setUser} />
-              ) : (
+                <ProfileFormScreen
+                  user={user}
+                  setUser={setUser}
+                  error={error}
+                  fetchSendOtp={fetchSendOtp}
+                  fetchVerifyOtp={fetchVerifyOtp}
+                  verified={verified}
+                  loading={loading}
+                  refCode={refCode}
+                  token={token}
+                  otperror={otperror}
+                />) : (
                 <Navigate to="/home" replace />
               )
             }
@@ -156,7 +175,7 @@ export default function App() {
             path="/home"
             element={
               !user ? (
-                <Navigate to="/" replace />
+                <Navigate to="/login" replace />
               ) : isProfileCompleted === false ? (
                 <Navigate to="/complete-profile" replace />
               ) : (
@@ -166,6 +185,8 @@ export default function App() {
                   fetchPoints={fetchPoints}
                   points={points}
                   expire={expire}
+                  pointLastYear={pointLastYear}
+                  expireLastYear={expireLastYear}
                   fetchUpdatePhoneNumber={fetchUpdatePhoneNumber}
                 />
               )

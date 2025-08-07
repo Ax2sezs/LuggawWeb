@@ -5,18 +5,19 @@ import { useReward } from "../hooks/useReward";
 import RewardCard from "../components/RewardCard";
 import useLineAuth from "../hooks/useLineAuth";
 
-export default function RewardList({ reloadPoints }) {
-    const { rewards, loading, error, handleRedeem } = useReward(undefined, reloadPoints);
-    const { fetchPoints, points } = useLineAuth();
+export default function RewardList({ reloadPoints, points }) {
+    const { rewards, loading, error, handleRedeem } = useReward();
     const [showSuccessModal, setShowSuccessModal] = useState(false);
-    const sortedRewards = [...(rewards || [])].sort((a, b) => {
+    useEffect(() => {
+        console.log("Point At RewardList", points);
+    }, [points]); const sortedRewards = [...(rewards || [])].sort((a, b) => {
         const now = new Date();
 
         const isADisabled = now < new Date(a.startDate) || now > new Date(a.endDate);
         const isBDisabled = now < new Date(b.startDate) || now > new Date(b.endDate);
 
         if (isADisabled !== isBDisabled) {
-            return Number(isADisabled) - Number(isBDisabled); // enabled มาก่อน disabled
+            return Number(isADisabled) - Number(isBDisabled);
         }
 
         const pointA = Number(a.pointsRequired);
@@ -48,14 +49,14 @@ export default function RewardList({ reloadPoints }) {
 
     const onRedeemCallback = useCallback(async (rewardId) => {
         await handleRedeem(rewardId);
-        await fetchPoints();
+        await reloadPoints();
         setShowSuccessModal(true);
-    }, [handleRedeem, fetchPoints]);
+    }, [handleRedeem, reloadPoints]);
 
 
-    useEffect(() => {
-        fetchPoints();
-    }, [reloadPoints]);
+    // useEffect(() => {
+    //     fetchPoints();
+    // }, [reloadPoints]);
 
     if (loading)
         return (

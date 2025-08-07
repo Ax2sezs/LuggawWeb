@@ -12,13 +12,20 @@ export default function RewardCard({ reward, onRedeem, onPointsUpdate, points })
     const endDate = new Date(reward.endDate);
     const isTooEarly = now < startDate;
     const isExpired = now > endDate;
-    const isDisabled =
-        Number(points) < Number(reward.pointsRequired) ||
-        now < startDate ||
-        now > endDate;
+    const [isDisabled, setIsDisabled] = useState(true); // ค่าเริ่มต้น ปิดไว้ก่อน
+
+    useEffect(() => {
+        if (points !== undefined && points !== null) {
+            const enoughPoints = Number(points) >= Number(reward.pointsRequired);
+            const available = now >= startDate && now <= endDate;
+            setIsDisabled(!(enoughPoints && available)); // เปิดได้ถ้าทั้งแต้มพอ และอยู่ในช่วงเวลา
+        }
+    }, [points, reward.pointsRequired, reward.startDate, reward.endDate]);
+
     const handleConfirmRedeem = async () => {
         try {
             await onRedeem(reward.rewardId);
+            console.log("Confirm Redeem : ",points)
             // ไม่ต้องเปิด modal ที่นี่แล้ว
         } catch (error) {
             console.error("❌ Redeem failed:", error.message || error);

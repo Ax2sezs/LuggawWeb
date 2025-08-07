@@ -23,6 +23,7 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       localStorage.removeItem("lineUser");
       localStorage.removeItem("jwtToken");
+      localStorage.removeItem("admin_user")
 
       window.location.href = "/"; // กลับหน้า login
     }

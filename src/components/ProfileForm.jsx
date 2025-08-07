@@ -1,28 +1,47 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { format, parseISO } from "date-fns";
 
-export default function ProfileForm({ formData, setFormData, onSubmit }) {
+export default function ProfileForm({ formData, setFormData, onSubmit, error }) {
 
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [cooldown, setCooldown] = useState(0); // 0 = พร้อมกด
 
     const handleSubmit = () => {
         if (
             !isValidPhone(formData.phoneNumber) ||
             !formData.birthDate ||
             !formData.gender ||
-            !formData.allowMarketing
+            !formData.allowMarketing ||
+            !formData.firstName ||
+            !formData.lastName
         ) return;
 
         setIsSubmitting(true);
-        setTimeout(() => setIsSubmitting(false), 30000);
+        setCooldown(30); // เริ่ม cooldown 30 วิ
         onSubmit();
     };
-
+    useEffect(() => {
+        if (cooldown <= 0) return;
+        const timer = setTimeout(() => {
+            setCooldown(cooldown - 1);
+        }, 1000);
+        return () => clearTimeout(timer);
+    }, [cooldown]);
     const isValidPhone = (phone) => /^\d{10}$/.test(phone);
 
+    const isDisabled =
+        isSubmitting ||
+        cooldown > 0 ||
+        !formData.phoneNumber ||
+        formData.phoneNumber.length !== 10 ||
+        !formData.birthDate ||
+        !formData.gender ||
+        !formData.allowMarketing ||
+        !formData.firstName ||
+        !formData.lastName;
 
     const genderOptions = [
         { label: "ชาย", value: "male" },
@@ -35,10 +54,10 @@ export default function ProfileForm({ formData, setFormData, onSubmit }) {
         : null;
 
     return (
-        <div className="flex flex-col justify-center items-center">
-            <div className="flex justify-center w-2/3 h-auto -mb-7">
+        <div className="flex w-full justify-center items-center p-6">
+            {/* <div className="flex justify-center h-auto -mb-7">
                 <img src="./logo.png" className="" />
-            </div>
+            </div> */}
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -48,6 +67,37 @@ export default function ProfileForm({ formData, setFormData, onSubmit }) {
                 <h2 className="text-3xl font-semibold mb-6 text-center text-main-green">
                     กรอกข้อมูลเพิ่มเติม
                 </h2>
+                {/* ชื่อ */}
+                <div className="form-control mb-5">
+                    <label className="label">
+                        <span className="label-text font-medium text-main-green">ชื่อ</span>
+                    </label>
+                    <input
+                        type="text"
+                        value={formData.firstName}
+                        onChange={(e) =>
+                            setFormData({ ...formData, firstName: e.target.value })
+                        }
+                        placeholder="กรอกชื่อจริง"
+                        className="input input-bordered w-full text-base bg-sub-brown border-main-green rounded-2xl"
+                    />
+                </div>
+
+                {/* นามสกุล */}
+                <div className="form-control mb-5">
+                    <label className="label">
+                        <span className="label-text font-medium text-main-green">นามสกุล</span>
+                    </label>
+                    <input
+                        type="text"
+                        value={formData.lastName}
+                        onChange={(e) =>
+                            setFormData({ ...formData, lastName: e.target.value })
+                        }
+                        placeholder="กรอกนามสกุล"
+                        className="input input-bordered w-full text-base bg-sub-brown border-main-green rounded-2xl"
+                    />
+                </div>
 
                 {/* เบอร์โทร */}
                 <div className="form-control mb-5">
@@ -75,9 +125,9 @@ export default function ProfileForm({ formData, setFormData, onSubmit }) {
 
                 {/* วันเกิด */}
                 <div className="form-control mb-5 w-full flex flex-col">
-                       <span className="label-text font-medium text-main-green text-center">
-                            วันเกิด
-                        </span>
+                    <span className="label-text font-medium text-main-green text-center">
+                        วันเกิด
+                    </span>
                     <DatePicker
                         selected={birthDateValue}
                         onChange={(date) =>
@@ -141,18 +191,12 @@ export default function ProfileForm({ formData, setFormData, onSubmit }) {
                         </span>
                     </label>
                 </div>
-
+                <span className="">{error}</span>
                 {/* ปุ่มบันทึก */}
                 <motion.button
                     type="button"
                     onClick={handleSubmit}
-                    disabled={
-                        !formData.phoneNumber ||
-                        !formData.birthDate ||
-                        !formData.gender ||
-                        !formData.allowMarketing ||
-                        isSubmitting
-                    }
+                    disabled={isDisabled}
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.97 }}
                     className={`btn w-full text-xl font-itim border-none text-sub-brown
@@ -160,15 +204,40 @@ export default function ProfileForm({ formData, setFormData, onSubmit }) {
                             !formData.birthDate ||
                             !formData.gender ||
                             !formData.allowMarketing
-                            ? "bg-main-green cursor-not-allowed"
+                            ? "bg-main-green cursor-not-allowed opacity-50"
                             : "bg-main-green cursor-pointer"
                         }
     `}
                 >
-                    {isSubmitting ? "กำลังส่ง..." : "ยืนยัน"}
+                    {isSubmitting
+                        ? "กำลังส่ง..."
+                        : cooldown > 0
+                            ? `กรุณารออีก ${cooldown} วินาที`
+                            : "ยืนยัน"}
                 </motion.button>
+                <div className="text-xs text-gray-700 space-x-4 mt-5">
+                    โปรดอ่านนโยบายความเป็นส่วนตัวของเรา เพื่อรับทราบและทำความเข้าใจ ก่อนส่งข้อมูลทุกครั้ง <br></br><br></br>
 
+                    <a
+                        href="https://drive.google.com/file/d/1ezRmP3v6whAutaL8mj1XkUTWUDMj18Wh/view"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline hover:text-blue-600 transition"
+                    >
+                        Terms & Conditions
+                    </a>
+
+                    <a
+                        href="https://drive.google.com/file/d/18qHSoPQ-zvDn8VbkonAv0K5ct0qYmlbL/view?pli=1"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline hover:text-blue-600 transition"
+                    >
+                        Privacy Policy
+                    </a>
+                </div>
             </motion.div>
+
         </div>
     );
 }

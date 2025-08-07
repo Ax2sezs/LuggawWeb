@@ -4,6 +4,19 @@ import CountUp from "react-countup";
 import useAdmin from "../../hooks/useAdmin";
 import { User, Activity, Gift, Coins, Loader2, Heart, Mars, Venus, Transgender } from "lucide-react";
 
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend,
+} from "chart.js";
+import { Bar } from "react-chartjs-2";
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+
 export default function AdminHome() {
     const { data, fetchDashboard, loading } = useAdmin();
 
@@ -19,86 +32,135 @@ export default function AdminHome() {
             </div>
         );
     }
-    console.log("Total Members", data.members.total);
-    console.log("Gender Summary", data.genderSummary);
-
 
     if (!data) return null;
 
+    // เตรียมข้อมูลกราฟรายเดือนสมาชิกใหม่
+    const labels = data.monthlyNewUsers.map(item =>
+        `${item.year}-${item.month.toString().padStart(2, "0")}`
+    );
+    const newUsersCounts = data.monthlyNewUsers.map(item => item.count);
+
+    const chartData = {
+        labels,
+        datasets: [
+            {
+                label: "สมาชิกใหม่รายเดือน",
+                data: newUsersCounts,
+                backgroundColor: "rgba(25, 72, 41, 0.7)", // สีเขียว
+                borderRadius: 5,
+                barPercentage: 0.6,
+            },
+        ],
+    };
+
+    const chartOptions = {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: "top",
+            },
+            title: {
+                display: true,
+                text: "สมาชิกใหม่รายเดือนย้อนหลัง 12 เดือน",
+                font: { size: 18, weight: "bold" },
+            },
+            tooltip: {
+                callbacks: {
+                    label: (context) => `${context.parsed.y} คน`,
+                },
+            },
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    stepSize: 1,
+                },
+            },
+        },
+    };
+
     return (
         <div className="min-h-screen bg-gray-100 text-black">
-            <main className="p-8 max-w-7xl mx-auto space-y-12">
-                {/* สมาชิก */}
+            <main className="p-4  mx-auto space-y-12">
+                {/* กราฟซ้าย - การ์ดขวา */}
+                <section className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    {/* กราฟ */}
+                    <div className="lg:col-span-7 bg-white rounded shadow p-8">
+                        <Bar data={chartData} options={chartOptions} />
+                    </div>
+                    
+                    {/* การ์ดสรุป */}
+                    <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
+                        {[
+                            {
+                                icon: <User className="w-6 h-6 text-gray-400" />,
+                                label: "สมาชิกทั้งหมด",
+                                value: data.members.total,
+                                valueColor: "text-gray-900",
+                            },
+                            {
+                                icon: <Activity className="w-6 h-6 text-green-500" />,
+                                label: "Active (ภายใน 30 วัน)",
+                                value: data.members.active,
+                                valueColor: "text-green-600",
+                            },
+                            {
+                                icon: <Activity className="w-6 h-6 text-red-500" />,
+                                label: "Inactive",
+                                value: data.members.inactive,
+                                valueColor: "text-red-600",
+                            },
+                            {
+                                icon: <Coins className="w-6 h-6 text-blue-500" />,
+                                label: "แต้มที่ได้รับทั้งหมด",
+                                value: data.points.earned,
+                                valueColor: "text-blue-600",
+                            },
+                            {
+                                icon: <Gift className="w-6 h-6 text-orange-500" />,
+                                label: "แต้มที่ถูกใช้แลกของรางวัล",
+                                value: data.points.redeemed,
+                                valueColor: "text-orange-600",
+                            },
+                        ].map((card, i) => (
+                            <MotionSummaryCard
+                                key={i}
+                                icon={card.icon}
+                                label={card.label}
+                                value={card.value}
+                                valueColor={card.valueColor}
+                                percent={card.percent}
+                                index={i}
+                            />
+                        ))}
+                    </div>
+                </section>
+
+                {/* เพศ */}
                 <section className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {[
                         {
-                            icon: <User className="w-6 h-6 text-gray-400" />,
-                            label: "สมาชิกทั้งหมด",
-                            value: data.members.total,
-                            valueColor: "text-gray-900",
-                        },
-                        {
-                            icon: <Activity className="w-6 h-6 text-green-500" />,
-                            label: "Active (ภายใน 30 วัน)",
-                            value: data.members.active,
-                            valueColor: "text-green-600",
-                        },
-                        {
-                            icon: <Activity className="w-6 h-6 text-red-500" />,
-                            label: "Inactive",
-                            value: data.members.inactive,
-                            valueColor: "text-red-600",
-                        },
-                        {
-                            icon: <Mars className="w-6 h-6 text-red-500" />,
+                            icon: <Mars className="w-6 h-6 text-blue-500" />,
                             label: "Male",
                             value: data.genderSummary.male,
                             percent: ((data.genderSummary.male / data.members.total) * 100).toFixed(2),
-                            valueColor: "text-red-600",
-                        },
-                        {
-                            icon: <Venus className="w-6 h-6 text-red-500" />,
-                            label: "Female",
-                            value: data.genderSummary.female,
-                            percent: ((data.genderSummary.female / data.members.total) * 100).toFixed(2),
-                            valueColor: "text-red-600",
-                        },
-                        {
-                            icon: <Transgender className="w-6 h-6 text-red-500" />,
-                            label: "Other",
-                            value: data.genderSummary.other,
-                            percent: ((data.genderSummary.other / data.members.total) * 100).toFixed(2),
-                            valueColor: "text-red-600",
-                        },
-
-
-                    ].map((card, i) => (
-                        <MotionSummaryCard
-                            key={i}
-                            icon={card.icon}
-                            label={card.label}
-                            value={card.value}
-                            valueColor={card.valueColor}
-                            percent={card.percent} // ✅ ใส่ตรงนี้
-                            index={i}
-                        />
-                    ))}
-                </section>
-
-                {/* แต้ม */}
-                <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {[
-                        {
-                            icon: <Coins className="w-6 h-6 text-blue-500" />,
-                            label: "แต้มที่ได้รับทั้งหมด",
-                            value: data.points.earned,
                             valueColor: "text-blue-600",
                         },
                         {
-                            icon: <Gift className="w-6 h-6 text-orange-500" />,
-                            label: "แต้มที่ถูกใช้แลกของรางวัล",
-                            value: data.points.redeemed,
-                            valueColor: "text-orange-600",
+                            icon: <Venus className="w-6 h-6 text-pink-500" />,
+                            label: "Female",
+                            value: data.genderSummary.female,
+                            percent: ((data.genderSummary.female / data.members.total) * 100).toFixed(2),
+                            valueColor: "text-pink-600",
+                        },
+                        {
+                            icon: <Transgender className="w-6 h-6 text-purple-500" />,
+                            label: "Other",
+                            value: data.genderSummary.other,
+                            percent: ((data.genderSummary.other / data.members.total) * 100).toFixed(2),
+                            valueColor: "text-purple-600",
                         },
                     ].map((card, i) => (
                         <MotionSummaryCard
@@ -107,6 +169,7 @@ export default function AdminHome() {
                             label={card.label}
                             value={card.value}
                             valueColor={card.valueColor}
+                            percent={card.percent}
                             index={i}
                         />
                     ))}
@@ -200,8 +263,6 @@ function MotionSummaryCard({ icon, label, value, valueColor = "text-gray-900", p
                     </div>
                 )}
             </div>
-
         </motion.div>
     );
 }
-

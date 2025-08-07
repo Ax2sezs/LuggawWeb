@@ -6,6 +6,13 @@
   <link rel="icon" type="image/svg+xml" href="/logo.jpg" />
   <link href="https://fonts.googleapis.com/css2?family=Itim&family=Playpen+Sans+Thai:wght@100..800&display=swap"
     rel="stylesheet">
+  <script>
+    const code = new URLSearchParams(window.location.search).get("code");
+    if (code && !sessionStorage.getItem("line_code_used")) {
+      sessionStorage.setItem("line_code_processing", "1");
+    }
+  </script>
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Luggaw</title>
 </head>

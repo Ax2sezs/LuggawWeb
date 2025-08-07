@@ -7,8 +7,8 @@ import useSignalR from "../hooks/useSignalR";
 import toast from "react-hot-toast";
 import Pagination from "./Pagination";
 
-export default function RedeemedRewardList({ userId, status = "unused" }) {
-    const { redeemedRewards, loading, error, refetch, totalItem, page, setPage } = useRedeemedRewards(userId, status);
+export default function RedeemedRewardList({ status = "unused" }) {
+    const { redeemedRewards, loading, error, refetch, totalItem, page, setPage } = useRedeemedRewards(status);
     const [rewards, setRewards] = useState([]);
     const [selectedReward, setSelectedReward] = useState(null);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -99,7 +99,10 @@ export default function RedeemedRewardList({ userId, status = "unused" }) {
             <div className="flex flex-col items-center gap-6 min-h-screen">
                 {rewards.length === 0 && (
                     <p className="text-center text-main-brown text-lg font-medium mt-12">
-                        <img src="./logo.png" alt="logo" />
+                        <div className="flex justify-center">
+                            <img src="./lg.png" alt="logo" className="w-auto h-28" />
+                        </div>
+                        <div className="border-2 border-dashed my-2 border-main-green"/>
                         ไม่มีรางวัลที่แลก
                     </p>
                 )}
@@ -282,12 +285,7 @@ export default function RedeemedRewardList({ userId, status = "unused" }) {
                                     </button>
                                 </div>
                             </div>
-                        </div>
-
-                        {/* Backdrop */}
-                        <form method="dialog" className="modal-backdrop">
-                            <button>close</button>
-                        </form>
+                        </div>                      
                     </dialog>
                 )}
 

@@ -11,7 +11,7 @@ export default function useAdminLogin() {
         }
     });
 
-    const [token, setToken] = useState(() => localStorage.getItem("admin_token") || null);
+    const [token, setToken] = useState(() => localStorage.getItem("jwtToken") || null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -31,7 +31,7 @@ export default function useAdminLogin() {
                 fullName: data.fullName,
             });
 
-            localStorage.setItem("admin_token", data.token);
+            localStorage.setItem("jwtToken", data.token);
             localStorage.setItem("admin_user", JSON.stringify({
                 userId: data.userId,
                 username: data.username,
@@ -52,7 +52,7 @@ export default function useAdminLogin() {
     const logout = () => {
         setToken(null);
         setAdminUser(null);
-        localStorage.removeItem("admin_token");
+        localStorage.removeItem("jwtToken");
         localStorage.removeItem("admin_user");
         window.location.href = "/";
 

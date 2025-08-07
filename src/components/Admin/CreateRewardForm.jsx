@@ -97,13 +97,13 @@ export default function CreateRewardForm({ initialData, onCancel, onSave }) {
         formData.append("RewardType", form.rewardType);
 
         if (form.imageFile) {
-            formData.append("Image", form.imageFile); // ✅ ต้องเป็น binary file
+            formData.append("Image", form.imageFile);
         }
 
         try {
-            await createReward(formData); // <-- ต้องรับ FormData ไม่ใช่ object ปกติ
+            await createReward(formData);
             toast.success("สร้างรางวัลสำเร็จ");
-            navigate("/admin/reward"); // ✅ redirect หลังสำเร็จ
+            navigate("/admin/reward");
 
         } catch (error) {
             console.error(error);
@@ -212,7 +212,7 @@ export default function CreateRewardForm({ initialData, onCancel, onSave }) {
                     <span>Coupon Name</span>
                     <input
                         type="text"
-                        name="rewardName" // ✅ ต้องตรงกับ useState
+                        name="rewardName"
                         value={form.rewardName}
                         onChange={handleChange}
                         placeholder="Reward Name"
@@ -256,7 +256,7 @@ export default function CreateRewardForm({ initialData, onCancel, onSave }) {
                         name="startDate"
                         value={form.startDate}
                         onChange={handleChange}
-                        className="w-full p-2 border rounded"
+                        className="w-full p-2 border rounded bg-[linear-gradient(to_left,_#194829_10%,_white_10%)]"
                         required
                     />
                 </div>
@@ -267,7 +267,7 @@ export default function CreateRewardForm({ initialData, onCancel, onSave }) {
                         name="endDate"
                         value={form.endDate}
                         onChange={handleChange}
-                        className="w-full p-2 border rounded"
+                        className="w-full p-2 border rounded bg-[linear-gradient(to_left,_#194829_10%,_white_10%)]"
                         required
                     />
                 </div>

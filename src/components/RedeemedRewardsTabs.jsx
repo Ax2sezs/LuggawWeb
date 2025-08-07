@@ -8,7 +8,7 @@ const statuses = [
   { key: "expired", label: "หมดอายุ" },
 ];
 
-export default function RedeemedRewardsTabs({ userId }) {
+export default function RedeemedRewardsTabs() {
   const [activeStatus, setActiveStatus] = useState("unused");
 
   return (
@@ -38,7 +38,7 @@ export default function RedeemedRewardsTabs({ userId }) {
       </div>
 
       {/* Tab Content */}
-      <RedeemedRewardList userId={userId} status={activeStatus} />
+      <RedeemedRewardList  status={activeStatus} />
     </div>
   );
 }

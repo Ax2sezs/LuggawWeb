@@ -3,7 +3,6 @@ import Barcode from "react-barcode";
 import { Pencil } from "lucide-react";
 import { getFullImageUrl } from "../../utils/getFullImageUrl";
 
-
 export default function RewardForm({ initialData, onCancel, onSave }) {
     const [form, setForm] = useState({
         name: "",
@@ -14,7 +13,12 @@ export default function RewardForm({ initialData, onCancel, onSave }) {
         endDate: "",
         imageFile: null,
         imagePreview: "",
-        rewardType: ""
+        rewardType: "",
+        discountMax: "",
+        discountMin: "",
+        discountPercent: "",
+        discountType:""
+
     });
 
     useEffect(() => {
@@ -29,6 +33,10 @@ export default function RewardForm({ initialData, onCancel, onSave }) {
                 imageFile: null,
                 imagePreview: initialData.imageUrl || "",
                 rewardType: initialData.rewardType || "",
+                discountMin: initialData.discountMax || "",
+                discountMax: initialData.discountMin || "",
+                discountPercent: initialData.discountPercent || "",
+                discountType: initialData.discountType || ""
             });
         }
     }, [initialData]);
@@ -155,7 +163,7 @@ export default function RewardForm({ initialData, onCancel, onSave }) {
                         name="startDate"
                         value={form.startDate}
                         onChange={handleChange}
-                        className="w-full p-2 border rounded"
+                        className="w-full p-2 border rounded bg-[linear-gradient(to_left,_#194829_10%,_white_10%)]"
                     />
                 </div>
                 <div className="flex flex-col w-1/2">
@@ -165,9 +173,38 @@ export default function RewardForm({ initialData, onCancel, onSave }) {
                         name="endDate"
                         value={form.endDate}
                         onChange={handleChange}
-                        className="w-full p-2 border rounded"
+                        className="w-full p-2 border rounded bg-[linear-gradient(to_left,_#194829_10%,_white_10%)]"
                     />
                 </div>
+            </div>
+            <div className="">
+                <span className="">Discount Min</span>
+                <input
+                    type="number"
+                    name="discountMin"
+                    value={form.discountMin}
+                    onChange={handleChange}
+                />
+                  <span className="">Discount Max</span>
+                <input
+                    type="number"
+                    name="discountMax"
+                    value={form.discountMax}
+                    onChange={handleChange}
+                />
+                  <span className="">Discount Percent</span>
+                <input
+                    type="number"
+                    name="discountPercent"
+                    value={form.discountPercent}
+                    onChange={handleChange}
+                />
+                 <input
+                    type="number"
+                    name="discountType"
+                    value={form.discountType}
+                    onChange={handleChange}
+                />
             </div>
 
             <div className="flex justify-end space-x-2">
