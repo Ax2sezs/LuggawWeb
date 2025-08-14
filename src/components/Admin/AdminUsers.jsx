@@ -83,6 +83,14 @@ function AdminUsers() {
       sortState: sortConfig,
     },
     {
+      header: "Firstname",
+      key: "firstName",
+    },
+    {
+      header: "Lastname",
+      key: "lastName",
+    },
+    {
       header: "Age",
       key: "age",
       sortable: true,
@@ -154,6 +162,7 @@ function AdminUsers() {
           className="input bg-white border border-black p-2 w-2/3 rounded"
         />
       </div>
+      <div className="border border-gray-300 my-2" />
 
       {loading ? (
         <Loading />

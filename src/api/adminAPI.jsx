@@ -65,4 +65,10 @@ export const generateCode = (prefix) =>
     api.get(`/admin/generate-code?prefix=${prefix}`);
 
 export const loginAdmin = (data) =>
-    api.post("/admin/login", data).then((res)=>res.data)
+    api.post("/admin/login", data).then((res) => res.data)
+
+export const userReward = (rewardId, params) =>
+    api.get(`/admin/reward/${rewardId}/users`, { params });
+
+export const revertCoupon = (couponCode) =>
+    api.patch(`/admin/coupon/revert/${couponCode}`)

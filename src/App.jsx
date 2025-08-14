@@ -33,6 +33,7 @@ import ProfileFormScreen from "./pages/ProfileFormScreen";
 import MainAppLayout from "./MainLayout";
 import CallbackHandler from "./components/CallbackHandler";
 import { clearAuthData } from "./utils/auth";
+import AdminRewardUsers from "./components/Admin/AdminRewardUsers";
 
 function ProtectedAdminRoute() {
   const { adminUser, loading } = useAdminLogin();
@@ -73,6 +74,7 @@ export default function App() {
                 <Route path="feed/create" element={<CreateFeedForm />} />
                 <Route path="feed/edit/:feedId" element={<CreateFeedForm />} />
                 <Route path="transactions" element={<AdminTransaction />} />
+                <Route path="reward/:rewardId/users" element={<AdminRewardUsers />} />
               </Route>
             </Route>
             <Route path="*" element={<Navigate to="/admin" replace />} />
@@ -170,7 +172,16 @@ export default function App() {
             }
           />
 
-          <Route path="/callback" element={<CallbackHandler />} />
+          <Route
+            path="/callback"
+            element={
+              !user ? (
+                <CallbackHandler />
+              ) : (
+                <Navigate to="/home" replace />
+              )
+            }
+          />
           <Route
             path="/home"
             element={

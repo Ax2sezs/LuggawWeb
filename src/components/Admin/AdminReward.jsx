@@ -25,6 +25,7 @@ export default function AdminReward() {
     pageSize,
     fetchRewards,
     fetchCategory,
+    fetchUserReward,
     cate,
   } = useAdmin();
 
@@ -161,6 +162,21 @@ export default function AdminReward() {
         </button>
       ),
     },
+    {
+      header: "Users",
+      key: "users",
+      render: (reward) => (
+        <button
+          onClick={() => navigate(`/admin/reward/${reward.rewardId}/users`, {
+            state: { rewardName: reward.rewardName }
+          })}
+          className="btn btn-sm btn-outline"
+        >
+          Details
+        </button>
+      ),
+    }
+
   ];
 
   return (

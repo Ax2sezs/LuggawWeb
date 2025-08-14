@@ -42,7 +42,7 @@ export function ConfirmRedeemModal({ reward, isOpen, onClose, onConfirm }) {
     return (
         <dialog ref={dialogRef} className="modal sm:modal-middle">
             <div className="modal-box p-0 max-w-sm mx-auto bg-bg rounded-3xl shadow-2xl border-0 overflow-hidden font-[Itim]
-                            max-h-[90vh] flex flex-col">
+                            max-h-screen flex flex-col">
                 <div className="relative">
                     <figure>
                         <img
@@ -60,7 +60,7 @@ export function ConfirmRedeemModal({ reward, isOpen, onClose, onConfirm }) {
                     <div className="text-center space-y-2">
                         {/* <h3 className="text-xl font-bold text-main-green leading-tight">{reward.rewardName}</h3> */}
                         {/* <div className="w-16 h-1 bg-main-orange rounded-full mx-auto"></div> */}
-                        <div className="max-h-24 overflow-auto text-start">
+                        <div className="max-h-36 overflow-auto text-start">
                             <p className="text-main-green text-sm whitespace-pre-wrap">
                                 {reward.description}
                             </p>

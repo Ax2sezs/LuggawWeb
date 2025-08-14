@@ -35,10 +35,13 @@ export const checkPhone = (pn) => {
 export const sendOtp = (phoneNumber) => {
   return api.post("otp/send-otp", { phoneNumber })
 }
-export const verifyOtp = ({refCode,token,otp}) => {
-  return api.post("otp/verify-otp", { 
-    RefCode:refCode,
-    Token:token,
-    Otp:otp
-   })
+export const verifyOtp = ({ refCode, token, otp }) => {
+  return api.post("otp/verify-otp", {
+    RefCode: refCode,
+    Token: token,
+    Otp: otp
+  })
+}
+export const editProfile = (data) => {
+  return api.post("LineLogin/edit-profile-name", data)
 }

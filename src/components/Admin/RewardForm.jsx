@@ -17,7 +17,7 @@ export default function RewardForm({ initialData, onCancel, onSave }) {
         discountMax: "",
         discountMin: "",
         discountPercent: "",
-        discountType:""
+        discountType: ""
 
     });
 
@@ -33,16 +33,13 @@ export default function RewardForm({ initialData, onCancel, onSave }) {
                 imageFile: null,
                 imagePreview: initialData.imageUrl || "",
                 rewardType: initialData.rewardType || "",
-                discountMin: initialData.discountMax || "",
-                discountMax: initialData.discountMin || "",
+                discountMin: initialData.discountMin || "",
+                discountMax: initialData.discountMax || "",
                 discountPercent: initialData.discountPercent || "",
                 discountType: initialData.discountType || ""
             });
         }
     }, [initialData]);
-
-
-
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -131,7 +128,7 @@ export default function RewardForm({ initialData, onCancel, onSave }) {
                         <option value="2">Exclusive</option>
                     </select>
                 </div>
-                {/* <div className="flex flex-col w-1/3">
+                <div className="flex flex-col w-1/3">
                     <span className="">Coupon Code</span>
                     <input
                         type="text"
@@ -139,10 +136,9 @@ export default function RewardForm({ initialData, onCancel, onSave }) {
                         value={form.couponCode}
                         onChange={handleChange}
                         placeholder="Coupon Code"
-                        className="w-full p-2 rounded"
-                        disabled
+                        className="w-full p-2 border rounded"
                     />
-                </div> */}
+                </div>
             </div>
             <div className="flex flex-col">
                 <span className="">Description</span>
@@ -177,34 +173,49 @@ export default function RewardForm({ initialData, onCancel, onSave }) {
                     />
                 </div>
             </div>
-            <div className="">
-                <span className="">Discount Min</span>
-                <input
-                    type="number"
-                    name="discountMin"
-                    value={form.discountMin}
-                    onChange={handleChange}
-                />
-                  <span className="">Discount Max</span>
-                <input
-                    type="number"
-                    name="discountMax"
-                    value={form.discountMax}
-                    onChange={handleChange}
-                />
-                  <span className="">Discount Percent</span>
-                <input
-                    type="number"
-                    name="discountPercent"
-                    value={form.discountPercent}
-                    onChange={handleChange}
-                />
-                 <input
-                    type="number"
-                    name="discountType"
-                    value={form.discountType}
-                    onChange={handleChange}
-                />
+            <div className="flex gap-5">
+                <div className="flex flex-col">
+                    <span className="">Discount Min</span>
+                    <input
+                        className="input border border-black bg-white"
+                        type="number"
+                        name="discountMin"
+                        value={form.discountMin}
+                        onChange={handleChange}
+                    />
+                </div>
+                <div className="flex flex-col">
+                    <span className="">Discount Max</span>
+                    <input
+                        className="input border border-black bg-white"
+                        type="number"
+                        name="discountMax"
+                        value={form.discountMax}
+                        onChange={handleChange}
+                    />
+                </div>
+                <div className="flex flex-col">
+                    <span className="">Discount Percent %</span>
+                    <input
+                        className="input border border-black bg-white"
+                        type="number"
+                        name="discountPercent"
+                        value={form.discountPercent}
+                        onChange={handleChange}
+                    />
+                </div>
+                <div className="flex flex-col">
+                    <span className="">Discount Type</span>
+                    <select
+                        className="select border border-black bg-white"
+                        name="discountType"
+                        value={form.discountType}
+                        onChange={handleChange}
+                    >
+                        <option value={1}>ลดทั้งบิล</option>
+                        <option value={0}>ลดชิ้นเดียว</option>
+                    </select>
+                </div>
             </div>
 
             <div className="flex justify-end space-x-2">

@@ -19,6 +19,7 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 export default function AdminHome() {
     const { data, fetchDashboard, loading } = useAdmin();
+    
 
     useEffect(() => {
         fetchDashboard();
@@ -90,9 +91,9 @@ export default function AdminHome() {
                     <div className="lg:col-span-7 bg-white rounded shadow p-8">
                         <Bar data={chartData} options={chartOptions} />
                     </div>
-                    
+
                     {/* การ์ดสรุป */}
-                    <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
+                    <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
                         {[
                             {
                                 icon: <User className="w-6 h-6 text-gray-400" />,
@@ -122,6 +123,24 @@ export default function AdminHome() {
                                 icon: <Gift className="w-6 h-6 text-orange-500" />,
                                 label: "แต้มที่ถูกใช้แลกของรางวัล",
                                 value: data.points.redeemed,
+                                valueColor: "text-orange-600",
+                            },
+                            {
+                                icon: <Gift className="w-6 h-6 text-orange-500" />,
+                                label: "อายุน้อยที่สุด",
+                                value: data.members.minAge,
+                                valueColor: "text-orange-600",
+                            },
+                            {
+                                icon: <Gift className="w-6 h-6 text-orange-500" />,
+                                label: "อายุเฉลี่ย",
+                                value: data.members.averageAge,
+                                valueColor: "text-orange-600",
+                            },
+                            {
+                                icon: <Gift className="w-6 h-6 text-orange-500" />,
+                                label: "อายุมากที่สุด",
+                                value: data.members.maxAge,
                                 valueColor: "text-orange-600",
                             },
                         ].map((card, i) => (

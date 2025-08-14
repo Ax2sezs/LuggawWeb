@@ -1,22 +1,13 @@
 // components/RewardFilterBar.jsx
 import React from "react";
 
-export default function RewardFilterBar({ filter, setFilter, setPage, setIsActive, onCreate, btnName,label }) {
+export default function RewardFilterBar({ filter, setFilter, setPage, setIsActive, onCreate, btnName, label }) {
     return (
         <div className="flex justify-between items-center mb-4 text-black gap-5 w-full">
             <h1 className="text-2xl font-bold">{label}</h1>
 
             <div className="flex gap-5 justify-end w-1/2">
-                <input
-                    type="text"
-                    placeholder="ค้นหา"
-                    value={filter.searchTerm}
-                    onChange={(e) => {
-                        setPage(1);
-                        setFilter(e.target.value);
-                    }}
-                    className="input border-black bg-white rounded px-3 py-2 w-2/3"
-                />
+
 
                 <select
                     value={filter.isActive === null ? "" : filter.isActive}
@@ -30,6 +21,16 @@ export default function RewardFilterBar({ filter, setFilter, setPage, setIsActiv
                     <option value="true">🟢 Active</option>
                     <option value="false">🔴 Inactive</option>
                 </select>
+                <input
+                    type="text"
+                    placeholder="ค้นหา"
+                    value={filter.searchTerm}
+                    onChange={(e) => {
+                        setPage(1);
+                        setFilter(e.target.value);
+                    }}
+                    className="input border-black bg-white rounded px-3 py-2 w-2/3"
+                />
             </div>
 
             <button onClick={onCreate} className="btn btn-success">

@@ -4,6 +4,7 @@ import {
   getUserPoints,
   updatePhoneNumber,
   checkPhone,
+  editProfile,
 } from "../api/lineLoginAPI";
 import {
   getStoredUser,
@@ -50,40 +51,52 @@ export default function useLineAuth() {
   }, []);
 
   // 🚀 Handle LINE login callback
-  useEffect(() => {
-    const code = new URLSearchParams(window.location.search).get("code");
-    if (!code) return;
+ useEffect(() => {
+  const code = new URLSearchParams(window.location.search).get("code");
 
-    const usedCode = sessionStorage.getItem("line_code_used");
-    if (usedCode === code || hasRequested.current) {
+  // ✅ ตรวจว่า sessionStorage บอกว่ากำลังโหลด
+  const isSessionLoading = sessionStorage.getItem("isLineLoading") === "true";
+  if (isSessionLoading) {
+    setIsLoading(true);
+  }
+
+  if (!code) return;
+
+  const usedCode = sessionStorage.getItem("line_code_used");
+  if (usedCode === code || hasRequested.current) {
+    sessionStorage.removeItem("isLineLoading"); // ✅ เคลียร์ flag loading
+    window.history.replaceState({}, document.title, "/");
+    return;
+  }
+
+  hasRequested.current = true;
+
+  // ✅ บอก browser ว่ากำลังโหลด (ใช้ข้ามการรีเฟรช)
+  sessionStorage.setItem("isLineLoading", "true");
+  setIsLoading(true);
+
+  handleLineCallback(code)
+    .then((res) => {
+      const newUser = res.data;
+      console.log("[Callback] isCompleted =", newUser.isCompleted);
+      setUser(newUser);
+      saveUserData(newUser);
+      if (newUser.token) saveToken(newUser.token);
+      sessionStorage.setItem("line_code_used", code);
       window.history.replaceState({}, document.title, "/");
-      return;
-    }
 
-    hasRequested.current = true;
+      setIsProfileCompleted(newUser.isCompleted);
+      setActive(!newUser.isActive);
+    })
+    .catch((err) => {
+      setError(err.response?.data?.error || err.message);
+    })
+    .finally(() => {
+      setIsLoading(false);
+      sessionStorage.removeItem("isLineLoading"); // ✅ ล้างตอนจบ
+    });
+}, []);
 
-    handleLineCallback(code)
-      .then((res) => {
-        setIsLoading(true)
-
-        const newUser = res.data;
-        console.log("[Callback] isCompleted =", newUser.isCompleted);
-        setUser(newUser);
-        saveUserData(newUser);
-        if (newUser.token) saveToken(newUser.token);
-        sessionStorage.setItem("line_code_used", code);
-        window.history.replaceState({}, document.title, "/");
-
-        setIsProfileCompleted(newUser.isCompleted);
-        setActive(!newUser.isActive);
-      })
-      .catch((err) => {
-        setError(err.response?.data?.error || err.message);
-        setIsLoading(false); // ✅ เพิ่มตรงนี้เพื่อให้หลุดจาก loading
-      }).finally(() => {
-        setIsLoading(false)
-      })
-  }, []);
 
   // 🚀 ดึงแต้มเมื่อมี user
   useEffect(() => {
@@ -150,6 +163,24 @@ export default function useLineAuth() {
     }
   };
 
+  const fetchUEditProfile = async (firstName, lastName) => {
+    setIsLoading(true);
+    try {
+      const data = await editProfile({ firstName, lastName });
+      toast.success("อัปเดตชื่อเรียบร้อยแล้ว");
+
+      const updatedUser = { ...user, firstName, lastName };
+      setUser(updatedUser);
+      saveUserData(updatedUser); // เก็บลง localStorage หรือ context
+    } catch (error) {
+      console.error("Error updating name:", error);
+      toast.error("เกิดข้อผิดพลาดในการอัปเดตชื่อ");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+
   // ✅ ฟังก์ชัน logout
   const logout = () => {
     setUser(null);
@@ -177,5 +208,6 @@ export default function useLineAuth() {
     checkPhoneNumber, // fn ที่เอาไปใช้ตอนกดตรวจสอบ
     isChecking,
     isUsed,
+    fetchUEditProfile,
   };
 }

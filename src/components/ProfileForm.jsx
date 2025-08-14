@@ -23,14 +23,21 @@ export default function ProfileForm({ formData, setFormData, onSubmit, error }) 
         setCooldown(30); // เริ่ม cooldown 30 วิ
         onSubmit();
     };
+    const isValidPhone = (phone) => /^\d{10}$/.test(phone);
+
     useEffect(() => {
-        if (cooldown <= 0) return;
+        if (cooldown <= 0) {
+            setIsSubmitting(false); // ✅ เปิดปุ่มหลัง cooldown ครบ
+            return;
+        }
+
         const timer = setTimeout(() => {
-            setCooldown(cooldown - 1);
+            setCooldown((prev) => prev - 1);
         }, 1000);
+
         return () => clearTimeout(timer);
     }, [cooldown]);
-    const isValidPhone = (phone) => /^\d{10}$/.test(phone);
+
 
     const isDisabled =
         isSubmitting ||
@@ -199,22 +206,17 @@ export default function ProfileForm({ formData, setFormData, onSubmit, error }) 
                     disabled={isDisabled}
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.97 }}
-                    className={`btn w-full text-xl font-itim border-none text-sub-brown
-        ${!formData.phoneNumber ||
-                            !formData.birthDate ||
-                            !formData.gender ||
-                            !formData.allowMarketing
-                            ? "bg-main-green cursor-not-allowed opacity-50"
-                            : "bg-main-green cursor-pointer"
-                        }
-    `}
+                    className={`btn w-full text-xl font-itim border-none transition-all duration-300
+    ${isDisabled
+                            ? "bg-gray-700 cursor-not-allowed text-gray-300"
+                            : "bg-main-green text-sub-brown cursor-pointer"}
+  `}
                 >
-                    {isSubmitting
-                        ? "กำลังส่ง..."
-                        : cooldown > 0
-                            ? `กรุณารออีก ${cooldown} วินาที`
-                            : "ยืนยัน"}
+                    {cooldown > 0
+                        ? `กรุณารออีก ${cooldown} วินาที`
+                        : "ยืนยัน"}
                 </motion.button>
+
                 <div className="text-xs text-gray-700 space-x-4 mt-5">
                     โปรดอ่านนโยบายความเป็นส่วนตัวของเรา เพื่อรับทราบและทำความเข้าใจ ก่อนส่งข้อมูลทุกครั้ง <br></br><br></br>
 

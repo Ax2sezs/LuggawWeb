@@ -12,10 +12,12 @@ import { fromUnixTime } from "date-fns";
 export default function RewardManagement() {
     const { rewardId } = useParams();
     const navigate = useNavigate();
-    const { fetchRewardById, updateReward } = useAdmin();
+    const { fetchRewardById, updateReward, fetchCategory, cate, fetchCategoryCode } = useAdmin();
     const [rewardData, setRewardData] = useState(null);
     const [loading, setLoading] = useState(true);
-
+    useEffect(() => {
+        fetchCategory(); // 👈 โหลด categories
+    }, []);
     useEffect(() => {
         const loadReward = async () => {
             try {

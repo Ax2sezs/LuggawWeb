@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import * as api from '../api/adminAPI';
 
 function useAdmin() {
@@ -15,11 +15,20 @@ function useAdmin() {
     const [rewardPage, setRewardPage] = useState(1);
     const [rewardTotalPages, setRewardTotalPages] = useState(1);
     const [rewardFilter, setRewardFilter] = useState('');
+    const [isUsed, setIsUsed] = useState(null)
 
     const [feeds, setFeeds] = useState([]);
     const [feedPage, setFeedPage] = useState(1);
     const [feedTotalPages, setFeedTotalPages] = useState(1);
     const [feedFilter, setFeedFilter] = useState('');
+
+    const [userReward, setUserReward] = useState([])
+    const [userRewardPage, setUserRewardPage] = useState(1)
+    const [userRewardTotalPages, setUserRewardTotalPages] = useState(1)
+    const [userRewardFilter, setUserRewardFilter] = useState('')
+    const [couponCode, setCouponCode] = useState('')
+    const [total, setTotal] = useState()
+    const [usedCount, setUsedCount] = useState()
 
     const [transaction, setTransaction] = useState([])
     const [transactionPage, setTransactionPage] = useState(1)
@@ -291,20 +300,60 @@ function useAdmin() {
         }
     };
 
-   const loginAdmin = async (username, password) => {
-    setLoading(true);
-    try {
-        const data = { username, password };
-        const res = await api.loginAdmin(data);
-        return res.data; // คาดว่าเป็น { token, userId, ... }
-    } catch (err) {
-        console.error("Login failed", err);
-        setError(err);
-        throw err;
-    } finally {
-        setLoading(false);
-    }
-};
+    const loginAdmin = async (username, password) => {
+        setLoading(true);
+        try {
+            const data = { username, password };
+            const res = await api.loginAdmin(data);
+            return res.data; // คาดว่าเป็น { token, userId, ... }
+        } catch (err) {
+            console.error("Login failed", err);
+            setError(err);
+            throw err;
+        } finally {
+            setLoading(false);
+        }
+    };
+    const fetchUserReward = async (rewardId, page, pageSize, filter, isUsed, couponCode) => {
+        setLoading(true);
+        try {
+            const res = await api.userReward(rewardId, {
+                page,
+                pageSize,
+                phoneNumber: filter,
+                isUsed: isUsed,
+                couponCode: couponCode,
+            });
+
+            setUserReward(res.data.paged.items); // ✅ ถูกต้อง
+            setUserRewardTotalPages(Math.ceil(res.data.paged.totalItems / pageSize));
+            setTotal(res.data.paged.totalItems)
+            setUsedCount(res.data.usedCount);
+        } catch (error) {
+            console.error("Failed to fetch user rewards", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+    const revertStatus = async (code) => {
+        try {
+            setUserReward(prev => prev.map(item =>
+                item.couponCode === code
+                    ? { ...item, isUsed: !item.isUsed }
+                    : item
+            ));
+
+            await api.revertCoupon(code);
+            fetchUserReward(rewardId, userRewardPage, pageSize, userRewardFilter, isUsed, couponCode);
+        } catch (err) {
+            console.error("Failed to toggle feed status", err);
+        }
+    };
+
+
+
+
+
 
 
 
@@ -380,6 +429,22 @@ function useAdmin() {
         fetchCategoryCode,
 
         loginAdmin,
+
+        fetchUserReward,
+        userReward,
+        setUserRewardPage,
+        userRewardPage,
+        userRewardTotalPages,
+        userRewardFilter,
+        setUserRewardFilter,
+        usedCount,
+        total,
+        setIsUsed,
+        isUsed,
+        couponCode,
+        setCouponCode,
+        revertStatus
+
     };
 }
 

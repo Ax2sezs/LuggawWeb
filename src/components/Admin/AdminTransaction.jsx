@@ -20,10 +20,23 @@ export default function AdminTransaction() {
     } = useAdmin();
 
     const [sortConfig, setSortConfig] = useState({ key: "transactionDate", direction: "desc" });
+    const [activeTab, setActiveTab] = useState("Earn"); // ✅ ค่าเริ่มต้น
+    useEffect(() => {
+        if (!transactionFilter.transactionType) {
+            setTransactionFilter((prev) => ({ ...prev, transactionType: "Earn" }));
+        }
+    }, []);
 
     useEffect(() => {
         fetchTransaction();
     }, [transactionPage, transactionFilter]);
+    // ✅ กดเปลี่ยน Tab แล้ว set filter
+    const handleTabChange = (type) => {
+        setActiveTab(type);
+        setTransactionPage(1);
+        setTransactionFilter((prev) => ({ ...prev, transactionType: type }));
+    };
+
 
     const handleSort = (key) => {
         setSortConfig((prev) => {
@@ -79,6 +92,14 @@ export default function AdminTransaction() {
             render: (tx) => new Date(tx.transactionDate).toLocaleString("th-TH"),
         },
         {
+            header: "ชื่อ",
+            key: "firstName",
+        },
+        {
+            header: "นามสกุล",
+            key: "lastName",
+        },
+        {
             header: "เบอร์โทร",
             key: "phoneNumber",
         },
@@ -108,15 +129,17 @@ export default function AdminTransaction() {
                 return <span className={`badge ${color} w-2/3 text-white`}>{label}</span>;
             },
         },
-
         {
-            header: "คำอธิบาย",
-            key: "description",
-        },
-        {
-            header:"Branch Code",
-            key:"branchCode"
+            header: "OrderRef/Code",
+            key: "branchCode",
+            render: (tx) => {
+                if (tx.transactionType?.toLowerCase() === "redeem") {
+                    return tx.orderRef || "-";
+                }
+                return tx.branchCode || "-";
+            }
         }
+
     ];
 
     return (
@@ -124,7 +147,6 @@ export default function AdminTransaction() {
             {/* 🔍 Transaction Filter */}
             <div className="flex flex-wrap items-end justify-between gap-4 mb-4 text-black">
                 <h1 className="text-2xl font-bold">Transaction Management</h1>
-                <button className="btn bg-main-orange border-hidden text-black" onClick={fetchTransaction}><RefreshCcw/>Fetch</button>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 w-full">
                     <input
@@ -143,7 +165,7 @@ export default function AdminTransaction() {
                         className="input border-black bg-white rounded px-3 py-2 w-full"
                     />
 
-                    <select
+                    {/* <select
                         value={transactionFilter.transactionType || ""}
                         onChange={(e) => handleInputChange("transactionType", e.target.value)}
                         className="select border-black bg-white w-full"
@@ -151,7 +173,7 @@ export default function AdminTransaction() {
                         <option value="">ประเภททั้งหมด</option>
                         <option value="Earn">🟢 Earn</option>
                         <option value="Redeem">🔴 Redeem</option>
-                    </select>
+                    </select> */}
 
 
                     <input
@@ -167,8 +189,35 @@ export default function AdminTransaction() {
                         onChange={(e) => handleInputChange("endDate", e.target.value)}
                         className="input border-black bg-white rounded px-3 py-2 w-full"
                     />
+                    <div className="flex justify-end">
+                        <button className="btn w-1/3 bg-main-orange border-hidden text-black" onClick={fetchTransaction}><RefreshCcw />Fetch</button>
+                    </div>
                 </div>
             </div>
+            <div role="tablist" className="flex w-full border-b border-gray-300">
+                <a
+                    role="tab"
+                    onClick={() => handleTabChange("Earn")}
+                    className={`flex-1 text-center cursor-pointer py-2 ${activeTab === "Earn"
+                        ? "border-b-4 border-green-600 text-green-600 font-semibold"
+                        : "border-b-2 border-transparent text-gray-500 hover:text-gray-700"
+                        }`}
+                >
+                    Earn
+                </a>
+                <a
+                    role="tab"
+                    onClick={() => handleTabChange("Redeem")}
+                    className={`flex-1 text-center cursor-pointer py-2 ${activeTab === "Redeem"
+                        ? "border-b-4 border-red-600 text-red-600 font-semibold"
+                        : "border-b-2 border-transparent text-gray-500 hover:text-gray-700"
+                        }`}
+                >
+                    Redeem
+                </a>
+            </div>
+
+
 
             <div className="border border-gray-300 my-2" />
 
