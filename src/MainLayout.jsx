@@ -22,7 +22,7 @@ export default function MainAppLayout({ user, logout, fetchPoints, points, expir
   const activeIndex = tabs.findIndex((tab) => tab.key === activeView);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-  console.log("Render MainAppLayout points:", points);
+  // console.log("Render MainAppLayout points:", points);
 
   const handleLogout = () => {
     // ล้าง token หรือข้อมูล session ถ้าต้องการเพิ่มเติม

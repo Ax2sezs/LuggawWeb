@@ -18,9 +18,9 @@ export default function ProfileFormScreen({ user, setUser, error, fetchSendOtp, 
   const [otpSentData, setOtpSentData] = useState(null); // เก็บ refCode, token หลังส่ง OTP
   const [otpVerified, setOtpVerified] = useState(false);
 
-  useEffect(() => {
-    console.log("เข้าหน้า ProfileFormScreen แล้ว");
-  }, []);
+  // useEffect(() => {
+  //   console.log("เข้าหน้า ProfileFormScreen แล้ว");
+  // }, []);
 
 
   const isValidPhoneNumber = (phone) => /^[0-9]{9,10}$/.test(phone);

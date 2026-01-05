@@ -35,7 +35,7 @@ export default function AdminRewardUsers() {
         key: "redeemedDate",
         direction: "desc",
     });
-    console.log("Count", usedCount)
+    // console.log("Count", usedCount)
     useEffect(() => {
         if (!rewardId) return;
         fetchUserReward(rewardId, userRewardPage, pageSize, userRewardFilter, isUsed, couponCode);

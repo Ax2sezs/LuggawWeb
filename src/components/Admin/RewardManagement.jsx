@@ -21,9 +21,9 @@ export default function RewardManagement() {
     useEffect(() => {
         const loadReward = async () => {
             try {
-                console.log("Fetching reward:", rewardId); // ✅ debug ดู
+                // console.log("Fetching reward:", rewardId); // ✅ debug ดู
                 const data = await fetchRewardById(rewardId);
-                console.log("Fetched reward data:", data); // ✅ debug ดู
+                // console.log("Fetched reward data:", data); // ✅ debug ดู
                 setRewardData({
                     name: data.rewardName || "",
                     coin: data.pointsRequired || "",

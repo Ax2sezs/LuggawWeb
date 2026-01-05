@@ -11,7 +11,7 @@ export default function useSignalR(onCouponUsed, enabled = true) {
         connectionRef.current.off("CouponUsed");
         connectionRef.current.stop();
         connectionRef.current = null;
-        console.log("SignalR disconnected because enabled=false");
+        // console.log("SignalR disconnected because enabled=false");
       }
       return;
     }
@@ -30,10 +30,10 @@ export default function useSignalR(onCouponUsed, enabled = true) {
     const startConnection = async () => {
       try {
         await connection.start();
-        console.log("✅ Connected to SignalR");
+        // console.log("✅ Connected to SignalR");
 
         connection.on("CouponUsed", (couponCode) => {
-          console.log("🔔 CouponUsed event received:", couponCode);
+          // console.log("🔔 CouponUsed event received:", couponCode);
           onCouponUsed?.(couponCode);
         });
       } catch (err) {
@@ -44,7 +44,7 @@ export default function useSignalR(onCouponUsed, enabled = true) {
     startConnection();
 
     return () => {
-      console.log("Disconnecting SignalR");
+      // console.log("Disconnecting SignalR");
       if (connectionRef.current) {
         connectionRef.current.off("CouponUsed");
         connectionRef.current.stop();

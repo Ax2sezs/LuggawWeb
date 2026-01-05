@@ -25,7 +25,7 @@ export default function RewardCard({ reward, onRedeem, onPointsUpdate, points })
     const handleConfirmRedeem = async () => {
         try {
             await onRedeem(reward.rewardId);
-            console.log("Confirm Redeem : ",points)
+            // console.log("Confirm Redeem : ", points)
             // ไม่ต้องเปิด modal ที่นี่แล้ว
         } catch (error) {
             console.error("❌ Redeem failed:", error.message || error);
@@ -35,7 +35,11 @@ export default function RewardCard({ reward, onRedeem, onPointsUpdate, points })
     return (
         <>
             {/* การ์ดรางวัล */}
-            <div className="flex w-full max-w-3xl h-40 bg-bg shadow-lg rounded-2xl overflow-hidden relative border border-dashed border-black">
+            <div className="flex w-full max-w-3xl h-40 bg-bg shadow-lg rounded-2xl overflow-hidden relative border border-dashed border-black"
+                onClick={() => {
+                    if (!isDisabled) setShowConfirmModal(true);
+                }}
+            >
                 {reward.rewardType === 1 && (
                     <div className="absolute top-0 left-0 z-30 ">
                         <div className="flex items-center gap-2 bg-pink-600 text-white text-xs px-3 py-1 rounded-br-lg shadow-md font-semibold">
@@ -87,9 +91,9 @@ export default function RewardCard({ reward, onRedeem, onPointsUpdate, points })
                     <div className="border-t border-dashed border-gray-400 my-2"></div>
                     <div className="flex justify-center">
                         <button
-                            onClick={() => {
-                                setShowConfirmModal(true);
-                            }}
+                            // onClick={() => {
+                            //     setShowConfirmModal(true);
+                            // }}
                             disabled={isDisabled}
                             className={`mt-2 px-4 py-1.5 rounded-xl text-sm shadow flex gap-2 transition items-center
                             ${isDisabled ? "bg-gray-400 cursor-not-allowed" : "bg-main-green hover:scale-105 text-white"}`}

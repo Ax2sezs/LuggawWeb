@@ -9,7 +9,7 @@ export default function RewardList({ reloadPoints, points }) {
     const { rewards, loading, error, handleRedeem } = useReward();
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     useEffect(() => {
-        console.log("Point At RewardList", points);
+        // console.log("Point At RewardList", points);
     }, [points]); const sortedRewards = [...(rewards || [])].sort((a, b) => {
         const now = new Date();
 

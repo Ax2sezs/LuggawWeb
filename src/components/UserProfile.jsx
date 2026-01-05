@@ -30,7 +30,7 @@ export default function UserProfile({ user, points, expire, pointLastYear, expir
     }
     const formattedDate = formatExpireDate(expire);
     useEffect(() => {
-        console.log("Profile Point : ", points)
+        // console.log("Profile Point : ", points)
         points
     }, [points])
     return (
@@ -41,7 +41,7 @@ export default function UserProfile({ user, points, expire, pointLastYear, expir
                     {/* User Info */}
                     <div className="flex items-center gap-4">
                         <img
-                            src={user.pictureUrl || "https://via.placeholder.com/100"}
+                            src={user.pictureUrl || "./default.png"}
                             alt={user.displayName}
                             className="w-16 h-16 rounded-full border-2 border-sub-brown object-cover shadow-sm"
                         />
@@ -52,7 +52,7 @@ export default function UserProfile({ user, points, expire, pointLastYear, expir
                                 {points !== undefined && points !== null ? (
                                     <div className="flex gap-2">
                                         <span>{points} คะแนน</span>
-                                        <div
+                                        {/* <div
                                             className="tooltip tooltip-warning"
                                             data-tip={`คะแนน ${pointLastYear} จะหมดอายุใน ${new Date(expireLastYear).toLocaleDateString("th-TH", {
                                                 day: "2-digit",
@@ -63,7 +63,7 @@ export default function UserProfile({ user, points, expire, pointLastYear, expir
                                             <button className="">
                                                 <AlertCircle size={18} />
                                             </button>
-                                        </div>
+                                        </div> */}
 
                                     </div>
 
@@ -72,13 +72,13 @@ export default function UserProfile({ user, points, expire, pointLastYear, expir
                                 )}
                             </div>
 
-                            <span className="text-xs text-bg">
+                            {/* <span className="text-xs text-bg">
                                 {formattedDate ? (
                                     formattedDate
                                 ) : (
                                     <span className="loading loading-spinner loading-xs"></span>
                                 )}
-                            </span>
+                            </span> */}
                         </div>
                     </div>
 

@@ -78,7 +78,7 @@ export default function useLineAuth() {
   handleLineCallback(code)
     .then((res) => {
       const newUser = res.data;
-      console.log("[Callback] isCompleted =", newUser.isCompleted);
+      // console.log("[Callback] isCompleted =", newUser.isCompleted);
       setUser(newUser);
       saveUserData(newUser);
       if (newUser.token) saveToken(newUser.token);
@@ -114,7 +114,7 @@ export default function useLineAuth() {
       setExpire(res.data.expirePoint)
       setPointLastYear(res.data.userPointLastYear)
       setExpireLastYear(res.data.expirePointLastYear)
-      console.log("Set Points done :", res.data.userTotalPoint)
+      // console.log("Set Points done :", res.data.userTotalPoint)
     } catch (err) {
       // setError(err.message); // optional
     } finally {

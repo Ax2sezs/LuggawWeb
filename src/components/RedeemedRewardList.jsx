@@ -263,7 +263,7 @@ export default function RedeemedRewardList({ status = "unused" }) {
                                         <div className="flex flex-col items-center py-2 border border-black border-dashed rounded-3xl bg-white">
                                             <Barcode
                                                 value={selectedReward.couponCode}
-                                                width={0.9}
+                                                width={1.2}
                                                 height={40}
                                                 fontSize={12}
                                                 displayValue={true}
