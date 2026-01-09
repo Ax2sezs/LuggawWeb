@@ -70,6 +70,11 @@ function useAdmin() {
         fetchUsers();
     };
 
+    const toggleUserPolicy = async (userId, isAllow) => {
+        await api.toggleUserPolicy(userId, isAllow);
+        fetchUsers();
+    };
+
 
     const fetchRewards = async () => {
         setLoading(true);
@@ -443,7 +448,8 @@ function useAdmin() {
         isUsed,
         couponCode,
         setCouponCode,
-        revertStatus
+        revertStatus,
+        toggleUserPolicy
 
     };
 }

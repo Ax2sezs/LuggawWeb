@@ -7,6 +7,11 @@ export const getAllUsers = (params) =>
 export const toggleUserStatus = (userId, isActive) =>
     api.patch("/admin/toggle-user-status", { userId, isActive });
 
+
+export const toggleUserPolicy = (userId) =>
+    api.patch(`/admin/toggle-user-policy/${userId}`);
+
+
 export const createReward = (formData) =>
     api.post("/admin/create", formData, {
         headers: { "Content-Type": "multipart/form-data" }

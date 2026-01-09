@@ -19,6 +19,7 @@ function AdminUsers() {
     setIsActive,
     searchTerm,
     toggleUserStatus,
+    toggleUserPolicy,
     fetchUsers
   } = useAdmin();
 
@@ -145,6 +146,29 @@ function AdminUsers() {
         return parts.join(" ");
       },
     },
+    {
+      header: "Accept Policy",
+      key: "policy",
+      render: (user) => (
+        <label className="flex flex-col justify-center cursor-pointer">
+          <input
+            type="checkbox"
+            className="toggle toggle-lg bg-gray-400 checked:bg-green-300"
+            checked={user.isAllow}
+            onChange={() =>
+              toggleUserPolicy(user.userId, user.isAllow)
+            }
+          />
+          <span className="mt-1 text-sm">
+            {user.isAllow ? "Accepted" : "Not Accepted"}
+          </span>
+        </label>
+      ),
+    },
+
+
+
+
   ];
 
   return (
