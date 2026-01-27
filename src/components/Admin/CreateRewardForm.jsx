@@ -95,6 +95,11 @@ export default function CreateRewardForm({ initialData, onCancel, onSave }) {
         formData.append("IsActive", true);
         formData.append("CategoryId", form.categoryId);
         formData.append("RewardType", form.rewardType);
+        formData.append("DiscountMin", form.discountMin || 0);
+        formData.append("DiscountMax", form.discountMax || 0);
+        formData.append("DiscountPercent", form.discountPercent || 0);
+        formData.append("DiscountType", form.discountType || 1);
+        formData.append("CouponCode", form.couponCode);
 
         if (form.imageFile) {
             formData.append("Image", form.imageFile);
@@ -270,6 +275,50 @@ export default function CreateRewardForm({ initialData, onCancel, onSave }) {
                         className="w-full p-2 border rounded bg-[linear-gradient(to_left,_#194829_10%,_white_10%)]"
                         required
                     />
+                </div>
+            </div>
+            <div className="flex gap-5">
+                <div className="flex flex-col">
+                    <span className="">Discount Min</span>
+                    <input
+                        className="input border border-black bg-white"
+                        type="number"
+                        name="discountMin"
+                        value={form.discountMin}
+                        onChange={handleChange}
+                    />
+                </div>
+                <div className="flex flex-col">
+                    <span className="">Discount Max</span>
+                    <input
+                        className="input border border-black bg-white"
+                        type="number"
+                        name="discountMax"
+                        value={form.discountMax}
+                        onChange={handleChange}
+                    />
+                </div>
+                <div className="flex flex-col">
+                    <span className="">Discount Percent %</span>
+                    <input
+                        className="input border border-black bg-white"
+                        type="number"
+                        name="discountPercent"
+                        value={form.discountPercent}
+                        onChange={handleChange}
+                    />
+                </div>
+                <div className="flex flex-col">
+                    <span className="">Discount Type</span>
+                    <select
+                        className="select border border-black bg-white"
+                        name="discountType"
+                        value={form.discountType}
+                        onChange={handleChange}
+                    >
+                        <option value={1}>ลดทั้งบิล</option>
+                        <option value={0}>ลดชิ้นเดียว</option>
+                    </select>
                 </div>
             </div>
 
