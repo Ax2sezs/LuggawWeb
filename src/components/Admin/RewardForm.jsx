@@ -17,11 +17,14 @@ export default function RewardForm({ initialData, onCancel, onSave }) {
         discountMax: "",
         discountMin: "",
         discountPercent: "",
-        discountType: ""
+        discountType: "",
+        rewardCode: ""
 
     });
 
     useEffect(() => {
+            console.log("initialData:", initialData);
+
         if (initialData) {
             setForm({
                 name: initialData.name || "",
@@ -36,7 +39,8 @@ export default function RewardForm({ initialData, onCancel, onSave }) {
                 discountMin: initialData.discountMin || "",
                 discountMax: initialData.discountMax || "",
                 discountPercent: initialData.discountPercent || "",
-                discountType: initialData.discountType || ""
+                discountType: initialData.discountType || "",
+                rewardCode: initialData.rewardCode || ""
             });
         }
     }, [initialData]);
@@ -137,6 +141,18 @@ export default function RewardForm({ initialData, onCancel, onSave }) {
                         onChange={handleChange}
                         placeholder="Coupon Code"
                         className="w-full p-2 border rounded"
+                    />
+                </div>
+                <div className="flex flex-col w-1/3">
+                    <label htmlFor="rewardCode">Channel Code</label>
+                    <input
+                        type="text"
+                        name="rewardCode"
+                        value={form.rewardCode}
+                        onChange={handleChange}
+                        placeholder="Channel Code"
+                        className="w-full p-2 border rounded"
+
                     />
                 </div>
             </div>

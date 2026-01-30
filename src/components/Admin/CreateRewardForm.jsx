@@ -20,7 +20,8 @@ export default function CreateRewardForm({ initialData, onCancel, onSave }) {
         imageFile: null,
         imagePreview: "",
         categoryId: "",
-        rewardType: "0"
+        rewardType: "0",
+        
     });
 
     useEffect(() => {
@@ -100,6 +101,7 @@ export default function CreateRewardForm({ initialData, onCancel, onSave }) {
         formData.append("DiscountPercent", form.discountPercent || 0);
         formData.append("DiscountType", form.discountType || 1);
         formData.append("CouponCode", form.couponCode);
+        formData.append("RewardCode", form.rewardCode || "");
 
         if (form.imageFile) {
             formData.append("Image", form.imageFile);
@@ -191,21 +193,21 @@ export default function CreateRewardForm({ initialData, onCancel, onSave }) {
                             <Dices />
                             Generate Code
                         </button>
+
                     </div>
+
                 </div>
                 <div className="flex flex-col w-1/3">
-                    <label htmlFor="rewardType">Reward Type</label>
-                    <select
-                        name="rewardType"
-                        value={form.rewardType}
+                    <label htmlFor="rewardCode">Channel Code</label>
+                    <input
+                        type="text"
+                        name="rewardCode"
+                        value={form.rewardCode}
                         onChange={handleChange}
+                        placeholder="Channel Code"
                         className="w-full p-2 border rounded"
-                        required
-                    >
-                        <option value="0">General</option>
-                        <option value="1">BirthDay</option>
-                        <option value="2">Exclusive</option>
-                    </select>
+                        
+                    />
                 </div>
 
 
@@ -238,6 +240,20 @@ export default function CreateRewardForm({ initialData, onCancel, onSave }) {
                         min={0}
                         required
                     />
+                </div>
+                <div className="flex flex-col w-1/3">
+                    <label htmlFor="rewardType">Reward Type</label>
+                    <select
+                        name="rewardType"
+                        value={form.rewardType}
+                        onChange={handleChange}
+                        className="w-full p-2 border rounded"
+                        required
+                    >
+                        <option value="0">General</option>
+                        <option value="1">BirthDay</option>
+                        <option value="2">Exclusive</option>
+                    </select>
                 </div>
 
             </div>

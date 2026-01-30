@@ -37,6 +37,7 @@ export default function RewardManagement() {
                     discountMax: data.discountMax || "",
                     discountPercent: data.discountPercent || "",
                     discountType: data.discountType || "",
+                    rewardCode: data.rewardCode || ""
                 });
 
             } catch (err) {
@@ -60,6 +61,7 @@ export default function RewardManagement() {
         data.append("discountMin", formData.discountMin)
         data.append("discountPercent", formData.discountPercent)
         data.append("discountType", formData.discountType)
+        data.append("rewardCode", formData.rewardCode)
         if (formData.startDate) data.append("startDate", formData.startDate);
         if (formData.endDate) data.append("endDate", formData.endDate);
         if (formData.imageFile) data.append("imageFile", formData.imageFile);
