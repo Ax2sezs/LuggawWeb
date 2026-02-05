@@ -43,7 +43,20 @@ function useAdmin() {
     });
     const [data, setData] = useState(null); // เก็บข้อมูล Dashboard
     const [cate, setCate] = useState([])
+    const [exportModalOpen, setExportModalOpen] = useState(false);
+    const [exportStartDate, setExportStartDate] = useState("");
+    const [exportEndDate, setExportEndDate] = useState("");
+    const [exportLoading,setExportLoading] = useState(false)
     const [genCode, setGenCode] = useState('')
+    const openExportModal = () => {
+        setExportModalOpen(true);
+    };
+
+    const closeExportModal = () => {
+        setExportModalOpen(false);
+        setExportStartDate("");
+        setExportEndDate("");
+    };
 
 
     const fetchUsers = async () => {
@@ -355,6 +368,37 @@ function useAdmin() {
         }
     };
 
+    const exportRedeemed = async () => {
+        try {
+            if (!exportStartDate || !exportEndDate) return;
+            setExportLoading(true)
+            const res = await api.exportRedeemedUsers({
+                startDate: exportStartDate,
+                endDate: exportEndDate,
+            });
+
+            const blob = new Blob([res.data], {
+                type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            });
+
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement("a");
+
+            link.href = url;
+            link.download = `redeemed_${exportStartDate}_${exportEndDate}.xlsx`;
+            document.body.appendChild(link);
+            link.click();
+
+            link.remove();
+            window.URL.revokeObjectURL(url);
+            setExportLoading(false)
+            closeExportModal();
+        } catch (err) {
+            console.error("Export failed", err);
+        }
+    };
+
+
 
 
 
@@ -449,7 +493,17 @@ function useAdmin() {
         couponCode,
         setCouponCode,
         revertStatus,
-        toggleUserPolicy
+        toggleUserPolicy,
+
+        exportRedeemed,
+        exportModalOpen,
+        exportStartDate,
+        exportEndDate,
+        setExportStartDate,
+        setExportEndDate,
+        openExportModal,
+        closeExportModal,
+        exportLoading,
 
     };
 }

@@ -37,7 +37,8 @@ export default function RewardManagement() {
                     discountMax: data.discountMax || "",
                     discountPercent: data.discountPercent || "",
                     discountType: data.discountType || "",
-                    rewardCode: data.rewardCode || ""
+                    rewardCode: data.rewardCode || "",
+                    validDays: data.validDays || 0
                 });
 
             } catch (err) {
@@ -62,6 +63,7 @@ export default function RewardManagement() {
         data.append("discountPercent", formData.discountPercent)
         data.append("discountType", formData.discountType)
         data.append("rewardCode", formData.rewardCode)
+        data.append("validDays", formData.validDays)
         if (formData.startDate) data.append("startDate", formData.startDate);
         if (formData.endDate) data.append("endDate", formData.endDate);
         if (formData.imageFile) data.append("imageFile", formData.imageFile);

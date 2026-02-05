@@ -191,11 +191,30 @@ export default function ProfileForm({ formData, setFormData, onSubmit, error }) 
                             onChange={(e) =>
                                 setFormData({ ...formData, allowMarketing: e.target.checked })
                             }
-                            className="checkbox checkbox-neutral"
+                            className="checkbox bg-bg border-main-green checked:bg-main-green"
                         />
-                        <span className="label-text text-main-green font-medium">
-                            ยินยอมให้ใช้ข้อมูลเพื่อการตลาด
+                        <span className="label-text text-xs text-start text-main-green font-medium leading-relaxed">
+                            ข้าพเจ้าได้อ่าน เข้าใจ และตกลงยอมรับ
+                            <a
+                                href="https://drive.google.com/file/d/18qHSoPQ-zvDn8VbkonAv0K5ct0qYmlbL/view?pli=1"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="underline mx-1 hover:text-blue-600 transition"
+                            >
+                                นโยบายความเป็นส่วนตัว
+                            </a>
+                            และ
+                            <a
+                                href="https://drive.google.com/file/d/1ezRmP3v6whAutaL8mj1XkUTWUDMj18Wh/view"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="underline mx-1 hover:text-blue-600 transition"
+                            >
+                                เงื่อนไขการให้บริการ
+                            </a>
+                            ของทางบริษัทฯ
                         </span>
+
                     </label>
                 </div>
                 <span className="">{error}</span>

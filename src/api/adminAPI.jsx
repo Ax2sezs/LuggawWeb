@@ -77,3 +77,8 @@ export const userReward = (rewardId, params) =>
 
 export const revertCoupon = (couponCode) =>
     api.patch(`/admin/coupon/revert/${couponCode}`)
+export const exportRedeemedUsers = (params) =>
+    api.get("/admin/export", {
+        params,
+        responseType: "blob"
+    });

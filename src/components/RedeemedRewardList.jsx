@@ -12,6 +12,7 @@ export default function RedeemedRewardList({ status = "unused" }) {
     const [rewards, setRewards] = useState([]);
     const [selectedReward, setSelectedReward] = useState(null);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [activeTab, setActiveTab] = useState("barcode");
     const isModalOpen = selectedReward !== null;
     const now = new Date();
     const currentMonth = now.getMonth() + 1;
@@ -96,13 +97,13 @@ export default function RedeemedRewardList({ status = "unused" }) {
 
     return (
         <>
-            <div className="flex flex-col items-center gap-6 min-h-screen">
+            <div className="flex flex-col items-center gap-6">
                 {rewards.length === 0 && (
                     <p className="text-center text-main-brown text-lg font-medium mt-12">
                         <div className="flex justify-center">
                             <img src="./lg.png" alt="logo" className="w-auto h-28" />
                         </div>
-                        <div className="border-2 border-dashed my-2 border-main-green"/>
+                        <div className="border-2 border-dashed my-2 border-main-green" />
                         ไม่มีรางวัลที่แลก
                     </p>
                 )}
@@ -170,7 +171,7 @@ export default function RedeemedRewardList({ status = "unused" }) {
                                             <div className="flex items-center gap-2 text-xs mt-1 text-gray-500">
                                                 <CalendarDays className="w-4 h-4" />
                                                 <span>
-                                                    <span>ใช้ได้ถึง: {reward.rewardType === 1 ? "ภายในเดือนเกิด" : new Date(reward.endDate).toLocaleDateString("th-TH")}</span>
+                                                    <span>ใช้ได้ถึง: {reward.rewardType === 1 ? "ภายในเดือนเกิด" : new Date(reward.expiredAt).toLocaleDateString("th-TH")}</span>
                                                 </span>
                                             </div>
 
@@ -228,7 +229,7 @@ export default function RedeemedRewardList({ status = "unused" }) {
                             </div>
 
                             {/* Content */}
-                            <div className="px-6 pb-6 pt-3 space-y-5">
+                            <div className="px-3 pb-6 pt-3 space-y-5">
 
                                 {/* <div className="text-center space-y-2">
                                     <h3 className="text-xl font-bold text-main-green leading-tight">{selectedReward.rewardName}</h3>
@@ -239,54 +240,82 @@ export default function RedeemedRewardList({ status = "unused" }) {
                                         </p>
                                     </div>
                                 </div> */}
-                                <div className="border-2 border-main-orange w-16 rounded-3xl mb-3 text-center mx-auto" />
+                                {/* <div className="border-2 border-main-orange w-16 rounded-3xl text-center mx-auto -mb-1" /> */}
+                                <div className="flex bg-gray-100 rounded-2xl p-1">
+                                    <button
+                                        className={`flex-1 py-1 rounded-xl text-sm font-semibold transition
+            ${activeTab === "barcode"
+                                                ? "bg-main-green text-white"
+                                                : "text-main-green"}`}
+                                        onClick={() => setActiveTab("barcode")}
+                                    >
+                                        Barcode
+                                    </button>
 
-                                <div className="space-y-3">
-                                    {/* <div className="card bg-white/60 shadow-sm border-0 mt-1">
-                                        <div className="card-body px-3 py-2 flex-row items-center gap-2">
-                                            <div className="w-8 h-8 rounded-full bg-main-orange flex items-center justify-center">
-                                                <Calendar className="w-4 h-4 text-white" />
-                                            </div>
-                                            <div className="flex text-left text-xs leading-tight">
-                                                <div className="font-medium text-main-green">ใช้ได้ถึง :</div>
-                                                <div className="font-medium text-main-green/60 ml-1">
-                                                    {selectedReward.rewardType === 1
-                                                        ? "ภายในเดือนเกิด"
-                                                        : new Date(selectedReward.endDate).toLocaleDateString("th-TH")}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> */}
-
-                                    {/* Coupon code (ถ้ามี) */}
-                                    {selectedReward.couponCode && (
-                                        <div className="flex flex-col items-center py-2 border border-black border-dashed rounded-3xl bg-white">
-                                            <Barcode
-                                                value={selectedReward.couponCode}
-                                                width={1.2}
-                                                height={40}
-                                                fontSize={12}
-                                                displayValue={true}
-                                            />
-                                            {/* <p className="font-bold text-sm text-gray-700">
-                                                {selectedReward.couponCode}
-                                            </p> */}
-                                        </div>
-                                    )}
+                                    <button
+                                        className={`flex-1 py-1 rounded-xl text-sm font-semibold transition
+            ${activeTab === "detail"
+                                                ? "bg-main-green text-white"
+                                                : "text-main-green"}`}
+                                        onClick={() => setActiveTab("detail")}
+                                    >
+                                        รายละเอียด
+                                    </button>
                                 </div>
 
+                                <div className="">
+                                    <AnimatePresence mode="wait">
+                                        {activeTab === "barcode" && (
+                                            <motion.div
+                                                key="barcode"
+                                                initial={{ opacity: 0, y: 10 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: -10 }}
+                                                transition={{ duration: 0.2 }}
+                                                className="flex justify-center w-full"
+                                            >
+                                                {selectedReward.couponCode && (
+                                                    <div className="flex flex-col items-center w-full py-2 border border-black border-dashed rounded-3xl bg-white">
+                                                        <Barcode
+                                                            value={selectedReward.couponCode}
+                                                            width={1.2}
+                                                            height={40}
+                                                            fontSize={12}
+                                                            displayValue
+                                                        />
+                                                    </div>
+                                                )}
+                                            </motion.div>
+                                        )}
+
+                                        {activeTab === "detail" && (
+                                            <motion.div
+                                                key="detail"
+                                                initial={{ opacity: 0, y: 10 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: -10 }}
+                                                transition={{ duration: 0.2 }}
+                                                className="text-sm text-main-green/80 text-start whitespace-pre-wrap max-h-24 overflow-y-auto px-1"
+                                            >
+                                                {selectedReward.description}
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </div>
+
+
                                 {/* Buttons */}
-                                <div className="flex gap-3">
+                                <div className="flex gap-1">
                                     <button
                                         type="button"
-                                        className="btn btn-outline flex-1 rounded-2xl border-2 border-main-green text-main-green hover:bg-main-green/10"
+                                        className="btn w-full rounded-2xl border border-main-green bg-white text-main-green"
                                         onClick={closeModal}
                                     >
                                         ปิด
                                     </button>
                                 </div>
                             </div>
-                        </div>                      
+                        </div>
                     </dialog>
                 )}
 

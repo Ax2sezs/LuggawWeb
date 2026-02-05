@@ -86,7 +86,7 @@ export default function RewardCard({ reward, onRedeem, onPointsUpdate, points })
                     </div>
                     <div className="flex items-center gap-2 text-xs text-gray-500 mb-2">
                         <CalendarDays className="w-4 h-4" />
-                        <span>ใช้ได้ถึง: {reward.rewardType === 1 ? "ภายในเดือนเกิด" : new Date(reward.endDate).toLocaleDateString("th-TH")}</span>
+                        <span>แลกได้ถึง: {reward.rewardType === 1 ? "ภายในเดือนเกิด" : new Date(reward.endDate).toLocaleDateString("th-TH")}</span>
                     </div>
                     <div className="border-t border-dashed border-gray-400 my-2"></div>
                     <div className="flex justify-center">

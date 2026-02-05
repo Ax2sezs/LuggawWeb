@@ -18,12 +18,13 @@ export default function RewardForm({ initialData, onCancel, onSave }) {
         discountMin: "",
         discountPercent: "",
         discountType: "",
-        rewardCode: ""
+        rewardCode: "",
+        validDays: 0
 
     });
 
     useEffect(() => {
-            console.log("initialData:", initialData);
+        console.log("initialData:", initialData);
 
         if (initialData) {
             setForm({
@@ -40,7 +41,8 @@ export default function RewardForm({ initialData, onCancel, onSave }) {
                 discountMax: initialData.discountMax || "",
                 discountPercent: initialData.discountPercent || "",
                 discountType: initialData.discountType || "",
-                rewardCode: initialData.rewardCode || ""
+                rewardCode: initialData.rewardCode || "",
+                validDays: initialData.validDays || 0
             });
         }
     }, [initialData]);
@@ -186,6 +188,17 @@ export default function RewardForm({ initialData, onCancel, onSave }) {
                         value={form.endDate}
                         onChange={handleChange}
                         className="w-full p-2 border rounded bg-[linear-gradient(to_left,_#194829_10%,_white_10%)]"
+                    />
+                </div>
+                <div className="flex flex-col w-1/3">
+                    <span className="">Valid Days</span>
+                    <input
+                        type="number"
+                        name="validDays"
+                        value={form.validDays}
+                        onChange={handleChange}
+                        placeholder="ระยะเวลาที่ใช้ได้ (วัน)"
+                        className="w-full p-2 border rounded"
                     />
                 </div>
             </div>

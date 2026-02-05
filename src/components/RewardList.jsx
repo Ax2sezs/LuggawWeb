@@ -8,6 +8,8 @@ import useLineAuth from "../hooks/useLineAuth";
 export default function RewardList({ reloadPoints, points }) {
     const { rewards, loading, error, handleRedeem } = useReward();
     const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [redeemedReward, setRedeemedReward] = useState(null);
+
     useEffect(() => {
         // console.log("Point At RewardList", points);
     }, [points]); const sortedRewards = [...(rewards || [])].sort((a, b) => {
@@ -45,15 +47,19 @@ export default function RewardList({ reloadPoints, points }) {
     });
 
 
+    console.log("Sorted Rewards: ", sortedRewards);
 
 
     const onRedeemCallback = useCallback(async (rewardId) => {
         await handleRedeem(rewardId);
+        const redeemed = rewards.find(r => r.rewardId === rewardId);
+        setRedeemedReward(redeemed);
+
         await reloadPoints();
         setShowSuccessModal(true);
-    }, [handleRedeem, reloadPoints]);
+    }, [handleRedeem, reloadPoints, rewards]);
 
-
+    console.log("Check Redeemed Reward: ", redeemedReward);
     // useEffect(() => {
     //     fetchPoints();
     // }, [reloadPoints]);
@@ -128,7 +134,7 @@ export default function RewardList({ reloadPoints, points }) {
                         </div>
 
                         {/* Celebration sparkles */}
-                        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 text-yellow-400 text-2xl">
+                        {/* <div className="absolute top-0 left-1/2 transform -translate-x-1/2 text-yellow-400 text-2xl">
                             ✨
                         </div>
                         <div className="absolute top-2 right-6 text-yellow-400 text-lg">
@@ -136,18 +142,29 @@ export default function RewardList({ reloadPoints, points }) {
                         </div>
                         <div className="absolute top-2 left-6 text-yellow-400 text-lg">
                             ✨
-                        </div>
+                        </div> */}
                     </div>
 
                     {/* Success text */}
                     <div className="relative z-10">
-                        <h2 className="text-2xl font-bold text-gray-800 mb-2">
+                        <h2 className="text-xl font-bold text-gray-800 mb-2">
                             แลกของรางวัลสำเร็จ!
                         </h2>
+
+                        <div className="flex justify-center items-center gap-2 text-2xl font-bold mb-2">
+                            <span className="text-main-brown">โปรดใช้ภายใน</span>
+                            <span className="text-main-green">
+                                {redeemedReward?.validDays}
+                            </span>
+                            <span className="text-main-brown">วัน</span>
+                        </div>
+
                         <p className="text-gray-600 text-base mb-6">
-                            โปรดตรวจสอบในหน้า <span className="font-semibold text-main-green">Redeemed</span>
+                            โปรดตรวจสอบในหน้า{" "}
+                            <span className="font-semibold text-main-green">Redeemed</span>
                         </p>
                     </div>
+
 
                     {/* Decorative divider */}
                     <div className="relative z-10 my-6">

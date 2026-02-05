@@ -21,7 +21,7 @@ export default function CreateRewardForm({ initialData, onCancel, onSave }) {
         imagePreview: "",
         categoryId: "",
         rewardType: "0",
-        
+
     });
 
     useEffect(() => {
@@ -102,6 +102,7 @@ export default function CreateRewardForm({ initialData, onCancel, onSave }) {
         formData.append("DiscountType", form.discountType || 1);
         formData.append("CouponCode", form.couponCode);
         formData.append("RewardCode", form.rewardCode || "");
+        formData.append("ValidDays", form.validDays || 0);
 
         if (form.imageFile) {
             formData.append("Image", form.imageFile);
@@ -206,7 +207,7 @@ export default function CreateRewardForm({ initialData, onCancel, onSave }) {
                         onChange={handleChange}
                         placeholder="Channel Code"
                         className="w-full p-2 border rounded"
-                        
+
                     />
                 </div>
 
@@ -277,7 +278,7 @@ export default function CreateRewardForm({ initialData, onCancel, onSave }) {
                         name="startDate"
                         value={form.startDate}
                         onChange={handleChange}
-                        className="w-full p-2 border rounded bg-[linear-gradient(to_left,_#194829_10%,_white_10%)]"
+                        className="w-full p-2 border rounded bg-[linear-gradient(to_left,_#194829_20%,_white_10%)]"
                         required
                     />
                 </div>
@@ -288,7 +289,20 @@ export default function CreateRewardForm({ initialData, onCancel, onSave }) {
                         name="endDate"
                         value={form.endDate}
                         onChange={handleChange}
-                        className="w-full p-2 border rounded bg-[linear-gradient(to_left,_#194829_10%,_white_10%)]"
+                        className="w-full p-2 border rounded bg-[linear-gradient(to_left,_#194829_20%,_white_10%)]"
+                        required
+                    />
+                </div>
+                <div className="flex flex-col w-1/3">
+                    <span>Valid Days</span>
+                    <input
+                        type="number"
+                        name="validDays"
+                        value={form.ValidDays}
+                        onChange={handleChange}
+                        placeholder="ระยะเวลาที่ใช้ได้ (วัน)"
+                        className="w-full p-2 border rounded"
+                        min={0}
                         required
                     />
                 </div>

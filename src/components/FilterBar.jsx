@@ -1,13 +1,12 @@
 // components/RewardFilterBar.jsx
 import React from "react";
 
-export default function RewardFilterBar({ filter, setFilter, setPage, setIsActive, onCreate, btnName, label }) {
+export default function RewardFilterBar({ filter, setFilter, setPage, setIsActive, onCreate, btnName, exportBtn, label, openExportModal }) {
     return (
         <div className="flex justify-between items-center mb-4 text-black gap-5 w-full">
             <h1 className="text-2xl font-bold">{label}</h1>
 
             <div className="flex gap-5 justify-end w-1/2">
-
 
                 <select
                     value={filter.isActive === null ? "" : filter.isActive}
@@ -32,10 +31,17 @@ export default function RewardFilterBar({ filter, setFilter, setPage, setIsActiv
                     className="input border-black bg-white rounded px-3 py-2 w-2/3"
                 />
             </div>
-
+            {exportBtn && (
+                <button onClick={openExportModal} className="btn border-2 border-main-green bg-white not-only:text-main-green">
+                    Export Excel
+                </button>
+            )}
             <button onClick={onCreate} className="btn btn-success">
                 {btnName}
             </button>
+
+
+
         </div>
     );
 }
