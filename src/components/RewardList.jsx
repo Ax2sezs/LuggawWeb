@@ -154,15 +154,16 @@ export default function RewardList({ reloadPoints, points }) {
                         <div className="flex justify-center items-center gap-2 text-2xl font-bold mb-2">
                             <span className="text-main-brown">โปรดใช้ภายใน</span>
                             <span className="text-main-green">
-                                {redeemedReward?.validDays}
+                                {redeemedReward?.rewardType == 1 ? "เดือนเกิด" : redeemedReward?.validDays}
                             </span>
-                            <span className="text-main-brown">วัน</span>
+                            {redeemedReward?.rewardType == 1 ? "" : <span className="text-main-brown">วัน</span>
+                            }
                         </div>
 
-                        <p className="text-gray-600 text-base mb-6">
-                            โปรดตรวจสอบในหน้า{" "}
+                        {/* <p className="text-gray-600 text-base mb-6">
+                            ตรวจสอบในหน้า{" "}
                             <span className="font-semibold text-main-green">Redeemed</span>
-                        </p>
+                        </p> */}
                     </div>
 
 
