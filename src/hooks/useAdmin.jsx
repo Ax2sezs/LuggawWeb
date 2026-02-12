@@ -23,12 +23,16 @@ function useAdmin() {
     const [feedFilter, setFeedFilter] = useState('');
 
     const [userReward, setUserReward] = useState([])
+    const [rewardTransaction, setRewardTransaction] = useState([])
     const [userRewardPage, setUserRewardPage] = useState(1)
     const [userRewardTotalPages, setUserRewardTotalPages] = useState(1)
     const [userRewardFilter, setUserRewardFilter] = useState('')
     const [couponCode, setCouponCode] = useState('')
     const [total, setTotal] = useState()
     const [usedCount, setUsedCount] = useState()
+
+    const [rwTransactionPage, setRwTransactionPage] = useState(1)
+    const [rwTransactionTotalPage, setRwTransactionTotalPage] = useState('')
 
     const [transaction, setTransaction] = useState([])
     const [transactionPage, setTransactionPage] = useState(1)
@@ -46,7 +50,7 @@ function useAdmin() {
     const [exportModalOpen, setExportModalOpen] = useState(false);
     const [exportStartDate, setExportStartDate] = useState("");
     const [exportEndDate, setExportEndDate] = useState("");
-    const [exportLoading,setExportLoading] = useState(false)
+    const [exportLoading, setExportLoading] = useState(false)
     const [genCode, setGenCode] = useState('')
     const openExportModal = () => {
         setExportModalOpen(true);
@@ -353,6 +357,33 @@ function useAdmin() {
             setLoading(false);
         }
     };
+
+    const fetchRewardTransaction = async () => {
+        setLoading(true);
+        try {
+            const res = await api.rewardTransaction({
+                page: rwTransactionPage,
+                pageSize: pageSize,
+                ...transactionFilter
+            });
+
+            setRewardTransaction(res.data.paged.items);
+
+            setRwTransactionTotalPage(
+                Math.ceil(res.data.paged.totalItems / pageSize)
+            );
+
+            setTotal(res.data.paged.totalItems);
+            setUsedCount(res.data.usedCount);
+
+        } catch (error) {
+            console.error("Failed to fetch reward transactions", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
     const revertStatus = async (code) => {
         try {
             setUserReward(prev => prev.map(item =>
@@ -463,7 +494,6 @@ function useAdmin() {
         deleteFeedImage,
 
         transaction,
-        loading,
         transactionPage,
         transactionTotalPage,
         setTransactionPage,
@@ -504,6 +534,13 @@ function useAdmin() {
         openExportModal,
         closeExportModal,
         exportLoading,
+
+        rewardTransaction,
+        fetchRewardTransaction,
+        setRwTransactionPage,
+        setRwTransactionTotalPage,
+        rwTransactionPage,
+        rwTransactionTotalPage
 
     };
 }

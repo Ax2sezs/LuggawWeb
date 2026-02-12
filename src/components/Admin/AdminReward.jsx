@@ -27,15 +27,7 @@ export default function AdminReward() {
     fetchCategory,
     fetchUserReward,
     cate,
-    exportModalOpen,
-    exportStartDate,
-    exportEndDate,
-    setExportStartDate,
-    setExportEndDate,
-    closeExportModal,
-    openExportModal,
-    exportRedeemed,
-    exportLoading
+   
   } = useAdmin();
 
   const navigate = useNavigate();
@@ -196,7 +188,6 @@ export default function AdminReward() {
         setFilter={setRewardFilter}
         setPage={setRewardPage}
         setIsActive={setIsActive}
-        openExportModal={openExportModal}
         onCreate={() => navigate("/admin/reward/create")}
         btnName={"+ Add Reward"}
         exportBtn={true}
@@ -213,58 +204,7 @@ export default function AdminReward() {
         onPageChange={setRewardPage}
         loading={loading}
       />
-      {exportModalOpen && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-sm">
-            <h3 className="flex gap-3 text-lg text-main-green font-semibold mb-4">
-              <FileUp />Export Redeemed Rewards
-            </h3>
-
-            <div className="space-y-3">
-              <label className="text-main-brown">Start Date</label>
-              <input
-                type="date"
-                value={exportStartDate}
-                onChange={(e) => setExportStartDate(e.target.value)}
-                className="w-full border-2 text-main-green rounded-lg px-3 py-2 border-main-orange bg-[linear-gradient(to_left,_#194829_20%,_white_10%)]"
-              />
-              <label className="text-main-brown">End Date</label>
-
-              <input
-                type="date"
-                value={exportEndDate}
-                onChange={(e) => setExportEndDate(e.target.value)}
-                className="w-full border-2 text-main-green rounded-lg px-3 py-2 border-main-orange bg-[linear-gradient(to_left,_#194829_20%,_white_10%)]"
-              />
-            </div>
-
-            <div className="flex justify-end gap-2 mt-6">
-              <button
-                onClick={closeExportModal}
-                className="px-4 py-2 rounded-lg border border-main-green text-main-green"
-              >
-                Cancel
-              </button>
-
-              <button
-                onClick={exportRedeemed}
-                disabled={!exportStartDate || !exportEndDate || exportLoading}
-                className="flex items-center justify-center gap-3 w-24 px-4 py-2 rounded-lg bg-main-green text-white disabled:opacity-50"
-              >
-                {exportLoading ? (
-                  <span className="loading loading-spinner"></span>
-                ) : (
-                  <>
-                    <Download size={24} />
-                    Download
-                  </>
-                )}
-              </button>
-
-            </div>
-          </div>
-        </div>
-      )}
+    
 
     </div>
   );

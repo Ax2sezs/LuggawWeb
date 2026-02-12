@@ -75,6 +75,9 @@ export const loginAdmin = (data) =>
 export const userReward = (rewardId, params) =>
     api.get(`/admin/reward/${rewardId}/users`, { params });
 
+export const rewardTransaction = (params) =>
+    api.get(`/admin/reward/transaction`, { params });
+
 export const revertCoupon = (couponCode) =>
     api.patch(`/admin/coupon/revert/${couponCode}`)
 export const exportRedeemedUsers = (params) =>

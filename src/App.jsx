@@ -34,6 +34,8 @@ import MainAppLayout from "./MainLayout";
 import CallbackHandler from "./components/CallbackHandler";
 import { clearAuthData } from "./utils/auth";
 import AdminRewardUsers from "./components/Admin/AdminRewardUsers";
+import AdminRewardTransaction from "./components/Admin/AdminRewardTransaction";
+import { AdminAuthProvider } from "./utils/AdminAuthContext";
 
 function ProtectedAdminRoute() {
   const { adminUser, loading } = useAdminLogin();
@@ -60,26 +62,29 @@ export default function App() {
     return (
       <>
         <Toaster position="top-right" reverseOrder={false} />
-        <Router>
-          <Routes>
-            <Route path="/admin/login" element={<AdminLogin isLoginPage={true} />} />
-            <Route path="/admin/*" element={<ProtectedAdminRoute />}>
-              <Route element={<AdminLayout />}>
-                <Route index element={<AdminHome />} />
-                <Route path="users" element={<AdminUsers />} />
-                <Route path="reward" element={<AdminReward />} />
-                <Route path="reward/edit/:rewardId" element={<RewardManagement />} />
-                <Route path="reward/create" element={<CreateRewardForm />} />
-                <Route path="feed" element={<AdminFeedManage />} />
-                <Route path="feed/create" element={<CreateFeedForm />} />
-                <Route path="feed/edit/:feedId" element={<CreateFeedForm />} />
-                <Route path="transactions" element={<AdminTransaction />} />
-                <Route path="reward/:rewardId/users" element={<AdminRewardUsers />} />
+        <AdminAuthProvider>
+          <Router>
+            <Routes>
+              <Route path="/admin/login" element={<AdminLogin isLoginPage={true} />} />
+              <Route path="/admin/*" element={<ProtectedAdminRoute />}>
+                <Route element={<AdminLayout />}>
+                  <Route index element={<AdminHome />} />
+                  <Route path="users" element={<AdminUsers />} />
+                  <Route path="reward" element={<AdminReward />} />
+                  <Route path="reward/edit/:rewardId" element={<RewardManagement />} />
+                  <Route path="reward/create" element={<CreateRewardForm />} />
+                  <Route path="feed" element={<AdminFeedManage />} />
+                  <Route path="feed/create" element={<CreateFeedForm />} />
+                  <Route path="feed/edit/:feedId" element={<CreateFeedForm />} />
+                  <Route path="transactions" element={<AdminTransaction />} />
+                  <Route path="reward/:rewardId/users" element={<AdminRewardUsers />} />
+                  <Route path="rwtransactions" element={<AdminRewardTransaction />} />
+                </Route>
               </Route>
-            </Route>
-            <Route path="*" element={<Navigate to="/admin" replace />} />
-          </Routes>
-        </Router>
+              <Route path="*" element={<Navigate to="/admin" replace />} />
+            </Routes>
+          </Router>
+        </AdminAuthProvider>
       </>
     );
   }

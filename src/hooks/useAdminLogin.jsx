@@ -1,5 +1,7 @@
 import { useState } from "react";
 import * as api from '../api/adminAPI';
+import { jwtDecode } from "jwt-decode";
+
 
 export default function useAdminLogin() {
     const [adminUser, setAdminUser] = useState(() => {
@@ -20,24 +22,29 @@ export default function useAdminLogin() {
         setLoading(true);
         setError(null);
         try {
-            // api.loginAdmin return res.data ที่มี token, userId, username, fullName
             const data = await api.loginAdmin({ username, password });
 
+            const decoded = jwtDecode(data.token);
+
+            const role =
+                decoded.role ||
+                decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+
             setToken(data.token);
-            // เก็บข้อมูล user ที่ได้จาก API ทั้งหมดเลย
-            setAdminUser({
+
+            const userData = {
                 userId: data.userId,
                 username: data.username,
                 fullName: data.fullName,
-            });
+                role: role
+            };
+
+            setAdminUser(userData);
 
             localStorage.setItem("jwtToken", data.token);
-            localStorage.setItem("admin_user", JSON.stringify({
-                userId: data.userId,
-                username: data.username,
-                fullName: data.fullName,
-            }));
-            return data; // <-- เพิ่ม return ตรงนี้
+            localStorage.setItem("admin_user", JSON.stringify(userData));
+
+            return data;
 
         } catch (err) {
             setError(err.response?.data?.message || err.message || "Login failed");
@@ -46,7 +53,6 @@ export default function useAdminLogin() {
             setLoading(false);
         }
     };
-
 
     // ฟังก์ชัน logout
     const logout = () => {
