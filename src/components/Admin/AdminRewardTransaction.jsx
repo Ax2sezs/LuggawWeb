@@ -4,7 +4,7 @@ import useAdmin from "../../hooks/useAdmin";
 import Pagination from "../Pagination";
 import Loading from "../Loading";
 import AdminTable from "./AdminTable";
-import { RefreshCcw,FileUp,Download } from "lucide-react";
+import { RefreshCcw, FileUp, Download } from "lucide-react";
 
 export default function AdminRewardTransaction() {
     const {
@@ -169,67 +169,74 @@ export default function AdminRewardTransaction() {
         <div className="overflow-x-auto rounded-box">
             {/* 🔍 Transaction Filter */}
             <div className="flex flex-wrap items-end justify-between gap-4 mb-4 text-black">
-                <h1 className="text-2xl font-bold">Transaction Management</h1>
-
                 <div className="flex gap-2 w-full">
-                    <input
-                        type="text"
-                        placeholder="ค้นหาเบอร์โทร"
-                        value={transactionFilter.phoneNumber || ""}
-                        onChange={(e) => handleInputChange("phoneNumber", e.target.value)}
-                        className="input border-black bg-white rounded px-3 py-2 w-full"
-                    />
+                    <div className="flex flex-col w-full">
+                        <label className="">เบอร์โทร</label>
+                        <input
+                            type="text"
+                            placeholder="ค้นหาเบอร์โทร"
+                            value={transactionFilter.phoneNumber || ""}
+                            onChange={(e) => handleInputChange("phoneNumber", e.target.value)}
+                            className="input border-black bg-white rounded px-3 py-2 w-full"
+                        />
+                    </div>
+                    <div className="flex flex-col w-full">
+                        <label className="">ชื่อรีวอร์ด</label>
+                        <input
+                            type="text"
+                            placeholder="ชื่อรีวอร์ด"
+                            value={transactionFilter.rewardName || ""}
+                            onChange={(e) => handleInputChange("rewardName", e.target.value)}
+                            className="input border-black bg-white rounded px-3 py-2 w-full"
+                        />
+                    </div>
+                    <div className="flex flex-col w-full">
+                        <label className="">สถานะ</label>
+                        <select
+                            value={
+                                transactionFilter.isUsed === true
+                                    ? "true"
+                                    : transactionFilter.isUsed === false
+                                        ? "false"
+                                        : ""
+                            }
+                            onChange={(e) => {
+                                const value = e.target.value;
 
-                    <input
-                        type="text"
-                        placeholder="ชื่อรางวัล"
-                        value={transactionFilter.rewardName || ""}
-                        onChange={(e) => handleInputChange("rewardName", e.target.value)}
-                        className="input border-black bg-white rounded px-3 py-2 w-full"
-                    />
-
-                    <select
-                        value={
-                            transactionFilter.isUsed === true
-                                ? "true"
-                                : transactionFilter.isUsed === false
-                                    ? "false"
-                                    : ""
-                        }
-                        onChange={(e) => {
-                            const value = e.target.value;
-
-                            handleInputChange(
-                                "isUsed",
-                                value === ""
-                                    ? undefined
-                                    : value === "true"
-                            );
-                        }}
-                        className="select border-black bg-white w-full"
-                    >
-                        <option value="">ทั้งหมด</option>
-                        <option value="true">Used</option>
-                        <option value="false">Not Used</option>
-                    </select>
-
-
-
-                    <input
-                        type="date"
-                        value={transactionFilter.startDate || ""}
-                        onChange={(e) => handleInputChange("startDate", e.target.value)}
-                        className="input border-black bg-white rounded px-3 py-2 w-full"
-                    />
-
-                    <input
-                        type="date"
-                        value={transactionFilter.endDate || ""}
-                        onChange={(e) => handleInputChange("endDate", e.target.value)}
-                        className="input border-black bg-white rounded px-3 py-2 w-full"
-                    />
-                    <div className="flex w-full gap-2 justify-end">
-                        <button className="btn w-1/3 bg-main-orange border-hidden text-white" onClick={fetchRewardTransaction}><RefreshCcw /></button>
+                                handleInputChange(
+                                    "isUsed",
+                                    value === ""
+                                        ? undefined
+                                        : value === "true"
+                                );
+                            }}
+                            className="select border-black bg-white w-full"
+                        >
+                            <option value="">ทั้งหมด</option>
+                            <option value="true">Used</option>
+                            <option value="false">Not Used</option>
+                        </select>
+                    </div>
+                    <div className="flex flex-col w-full">
+                        <label className="">วันที่แลก (ช่วงวัน)</label>
+                        <input
+                            type="date"
+                            value={transactionFilter.startDate || ""}
+                            onChange={(e) => handleInputChange("startDate", e.target.value)}
+                            className="input border-black bg-[linear-gradient(to_left,_#194829_20%,_white_10%)] rounded px-3 py-2 w-full"
+                        />
+                    </div>
+                    <div className="flex flex-col w-full">
+                        <label className="">ถึง</label>
+                        <input
+                            type="date"
+                            value={transactionFilter.endDate || ""}
+                            onChange={(e) => handleInputChange("endDate", e.target.value)}
+                            className="input border-black bg-[linear-gradient(to_left,_#194829_20%,_white_10%)] rounded px-3 py-2 w-full"
+                        />
+                    </div>
+                    <div className="flex w-full items-end gap-2 justify-end">
+                        <button className="btn w-1/3 bg-main-orange border-hidden text-gray-600" onClick={fetchRewardTransaction}><RefreshCcw /></button>
                         <button
                             className="btn w-1/3 bg-white border border-main-green text-main-green"
                             onClick={openExportModal}
