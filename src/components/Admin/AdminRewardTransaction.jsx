@@ -25,14 +25,16 @@ export default function AdminRewardTransaction() {
         closeExportModal,
         openExportModal,
         exportRedeemed,
-        exportLoading
+        exportLoading,
+        rwtransactionFilter,
+        setRwTransactionFilter
     } = useAdmin();
 
     const [sortConfig, setSortConfig] = useState({ key: "transactionDate", direction: "desc" });
 
     useEffect(() => {
         fetchRewardTransaction();
-    }, [rwTransactionPage, transactionFilter]);
+    }, [rwTransactionPage, rwtransactionFilter]);
     // ✅ กดเปลี่ยน Tab แล้ว set filter
 
     const handleSort = (key) => {
@@ -68,10 +70,25 @@ export default function AdminRewardTransaction() {
         });
         return sorted;
     }, [rewardTransaction, sortConfig]);
-
+    const handleClearClick = () => {
+        setRwTransactionFilter(
+            {
+                search: "",
+                transactionType: "",
+                rewardCode: "",
+                rewardCode: "",
+                phoneNumber: "",
+                startRedeemDate: "",
+                endRedeemDate: "",
+                startUsedDate: "",
+                endUsedDate: ""
+            }
+        )
+        fetchRewardTransaction()
+    }
     const handleInputChange = (field, value) => {
         setRwTransactionPage(1);
-        setTransactionFilter((prev) => ({ ...prev, [field]: value }));
+        setRwTransactionFilter((prev) => ({ ...prev, [field]: value }));
     };
 
     const columns = [
@@ -115,16 +132,16 @@ export default function AdminRewardTransaction() {
             key: "couponCode",
             render: (tx) => tx.couponCode || "-",
         },
-        {
-            header: "Points",
-            key: "pointUsed",
-            sortable: true,
-            onSort: handleSort,
-            sortState: sortConfig,
-            render: (tx) => (
-                <span className={tx.pointUsed < 0 ? "text-red-600" : "text-green-600"}>{tx.pointUsed}</span>
-            ),
-        },
+        // {
+        //     header: "Points",
+        //     key: "pointUsed",
+        //     sortable: true,
+        //     onSort: handleSort,
+        //     sortState: sortConfig,
+        //     render: (tx) => (
+        //         <span className={tx.pointUsed < 0 ? "text-red-600" : "text-green-600"}>{tx.pointUsed}</span>
+        //     ),
+        // },
         {
             header: "Status",
             key: "status",
@@ -150,8 +167,12 @@ export default function AdminRewardTransaction() {
             sortable: true,
             onSort: handleSort,
             sortState: sortConfig,
-            render: (tx) => new Date(tx.usedDate).toLocaleString("th-TH"),
+            render: (tx) =>
+                tx.usedDate
+                    ? new Date(tx.usedDate).toLocaleString("th-TH")
+                    : "-",
         },
+
         {
             header: "OrderRef/Code",
             key: "usedAt",
@@ -175,28 +196,29 @@ export default function AdminRewardTransaction() {
                         <input
                             type="text"
                             placeholder="ค้นหาเบอร์โทร"
-                            value={transactionFilter.phoneNumber || ""}
+                            value={rwtransactionFilter.phoneNumber || ""}
                             onChange={(e) => handleInputChange("phoneNumber", e.target.value)}
                             className="input border-black bg-white rounded px-3 py-2 w-full"
                         />
                     </div>
                     <div className="flex flex-col w-full">
-                        <label className="">ชื่อรีวอร์ด</label>
+                        <label className="">รหัสรีวอร์ด</label>
                         <input
                             type="text"
-                            placeholder="ชื่อรีวอร์ด"
-                            value={transactionFilter.rewardName || ""}
-                            onChange={(e) => handleInputChange("rewardName", e.target.value)}
+                            placeholder="รหัสรีวอร์ด"
+                            value={rwtransactionFilter.rewardCode || ""}
+                            onChange={(e) => handleInputChange("rewardCode", e.target.value)}
                             className="input border-black bg-white rounded px-3 py-2 w-full"
                         />
                     </div>
+
                     <div className="flex flex-col w-full">
                         <label className="">สถานะ</label>
                         <select
                             value={
-                                transactionFilter.isUsed === true
+                                rwtransactionFilter.isUsed === true
                                     ? "true"
-                                    : transactionFilter.isUsed === false
+                                    : rwtransactionFilter.isUsed === false
                                         ? "false"
                                         : ""
                             }
@@ -221,8 +243,8 @@ export default function AdminRewardTransaction() {
                         <label className="">วันที่แลก (ช่วงวัน)</label>
                         <input
                             type="date"
-                            value={transactionFilter.startDate || ""}
-                            onChange={(e) => handleInputChange("startDate", e.target.value)}
+                            value={rwtransactionFilter.startRedeemDate || ""}
+                            onChange={(e) => handleInputChange("startRedeemDate", e.target.value)}
                             className="input border-black bg-[linear-gradient(to_left,_#194829_20%,_white_10%)] rounded px-3 py-2 w-full"
                         />
                     </div>
@@ -230,13 +252,31 @@ export default function AdminRewardTransaction() {
                         <label className="">ถึง</label>
                         <input
                             type="date"
-                            value={transactionFilter.endDate || ""}
-                            onChange={(e) => handleInputChange("endDate", e.target.value)}
+                            value={rwtransactionFilter.endRedeemDate || ""}
+                            onChange={(e) => handleInputChange("endRedeemDate", e.target.value)}
+                            className="input border-black bg-[linear-gradient(to_left,_#194829_20%,_white_10%)] rounded px-3 py-2 w-full"
+                        />
+                    </div>
+                    <div className="flex flex-col w-full">
+                        <label className="">วันที่ใช้ (ช่วงวัน)</label>
+                        <input
+                            type="date"
+                            value={rwtransactionFilter.startUsedDate || ""}
+                            onChange={(e) => handleInputChange("startUsedDate", e.target.value)}
+                            className="input border-black bg-[linear-gradient(to_left,_#194829_20%,_white_10%)] rounded px-3 py-2 w-full"
+                        />
+                    </div>
+                    <div className="flex flex-col w-full">
+                        <label className="">ถึง</label>
+                        <input
+                            type="date"
+                            value={rwtransactionFilter.endUsedDate || ""}
+                            onChange={(e) => handleInputChange("endUsedDate", e.target.value)}
                             className="input border-black bg-[linear-gradient(to_left,_#194829_20%,_white_10%)] rounded px-3 py-2 w-full"
                         />
                     </div>
                     <div className="flex w-full items-end gap-2 justify-end">
-                        <button className="btn w-1/3 bg-main-orange border-hidden text-gray-600" onClick={fetchRewardTransaction}><RefreshCcw /></button>
+                        <button className="btn w-1/3 bg-main-orange border-hidden text-gray-600" onClick={handleClearClick}><RefreshCcw /></button>
                         <button
                             className="btn w-1/3 bg-white border border-main-green text-main-green"
                             onClick={openExportModal}

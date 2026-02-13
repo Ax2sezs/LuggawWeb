@@ -45,6 +45,18 @@ function useAdmin() {
         startDate: "",
         endDate: "",
     });
+
+    const [rwtransactionFilter, setRwTransactionFilter] = useState({
+        search: "",
+        transactionType: "",
+        rewardCode: "",
+        rewardCode: "",
+        phoneNumber: "",
+        startRedeemDate: "",
+        endRedeemDate: "",
+        startUsedDate:"",
+        endUsedDate:""
+    });
     const [data, setData] = useState(null); // เก็บข้อมูล Dashboard
     const [cate, setCate] = useState([])
     const [exportModalOpen, setExportModalOpen] = useState(false);
@@ -364,7 +376,7 @@ function useAdmin() {
             const res = await api.rewardTransaction({
                 page: rwTransactionPage,
                 pageSize: pageSize,
-                ...transactionFilter
+                ...rwtransactionFilter
             });
 
             setRewardTransaction(res.data.paged.items);
@@ -540,7 +552,9 @@ function useAdmin() {
         setRwTransactionPage,
         setRwTransactionTotalPage,
         rwTransactionPage,
-        rwTransactionTotalPage
+        rwTransactionTotalPage,
+        rwtransactionFilter,
+        setRwTransactionFilter
 
     };
 }
